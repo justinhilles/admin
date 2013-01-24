@@ -32,7 +32,8 @@ return array(
 	'files'			=> array(
 		__DIR__.'/../routes/routes.php',
 		__DIR__.'/../filters.php',
-		__DIR__.'/../macros.php'
+		__DIR__.'/../macros.php',
+		__DIR__.'/../global.php'
 	),
 	'components' => array(
 		'admin' => 'Justinhilles\Admin\Admin'
