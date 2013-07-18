@@ -99,9 +99,9 @@ class AdminServiceProvider extends ServiceProvider {
 		$aliases = Config::get('admin::config.aliases');
 
 		if(count($aliases)) {
-			if(!class_exists($alias))
-			{
-				foreach($aliases as $alias => $original) {
+
+			foreach($aliases as $alias => $original) {
+				if(!class_exists($alias)) {
 					class_alias($original, $alias);
 				}				
 			}
