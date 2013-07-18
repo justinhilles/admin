@@ -17,4 +17,9 @@ class AdminController extends Controller {
     {
     	return sprint($format, $this->routes, $route);
     }
+
+    public function upload()
+    {
+        
+    }
 }

@@ -8,7 +8,8 @@ return array(
 		'Role' 		=> 'Justinhilles\Admin\Models\Role',
 		'Permission'=> 'Justinhilles\Admin\Models\Permission',
 		'Confide' 	=> 'Zizaco\Confide\ConfideFacade',
-		'UserAdminController' => 'Justinhilles\Admin\Controllers\UserAdminController'
+		'UserAdminController' => 'Justinhilles\Admin\Controllers\UserAdminController',
+		'AdminController' => 'Justinhilles\Admin\Controllers\AdminController'
 	),
 	'providers' => array(
 		'Zizaco\Confide\ConfideServiceProvider',
