@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\View;
+use Zizaco\Confide\Confide;
 
 class UserAdminController extends AdminController {
 

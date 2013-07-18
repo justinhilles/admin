@@ -1,4 +1,7 @@
-<?php
+<?php namespace Justinhilles\Admin\Controllers;
+
+use Justinhilles\Admin\Models\Permission;
+use Illuminate\Support\Facades\View;
 
 class PermissionsAdminController extends AdminController {
 

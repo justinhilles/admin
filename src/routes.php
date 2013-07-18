@@ -5,10 +5,10 @@ Route::group(array('prefix' => 'admin', 'before' => ''), function() {
 	//User Management
 	Route::resource('users', 'Justinhilles\Admin\Controllers\UserAdminController');
 	Route::resource('roles', 'Justinhilles\Admin\Controllers\RolesAdminController');
-	Route::resource('permissions', 'PermissionsAdminController');
+	Route::resource('permissions', 'Justinhilles\Admin\Controllers\PermissionsAdminController');
 
 	//Dashboard
-	Route::get('/', 'UserAdminController@dashboard');
+	Route::get('/', 'Justinhilles\Admin\Controllers\UserAdminController@dashboard');
 });
 
 Route::group(array('prefix' => 'admin'), function() {
