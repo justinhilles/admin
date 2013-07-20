@@ -1,8 +1,17 @@
-<?php namespace Justinhilles\Admin\Controllers;
+<?php 
+
+namespace Justinhilles\Admin\Controllers;
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\View;
-use Zizaco\Confide\Confide;
+use Zizaco\Confide\ConfideFacade as Confide;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\App;
+use Justinhilles\Admin\Models\User;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 
 class UserAdminController extends AdminController {
 
@@ -14,7 +23,7 @@ class UserAdminController extends AdminController {
     public function __construct()
     {
         $this->links = self::getLinks();
-        $this->user = new \Justinhilles\Admin\Models\User;
+        $this->user = new User;
     }
 
     public static function getLinks()
@@ -39,7 +48,7 @@ class UserAdminController extends AdminController {
      */
     public function create()
     {
-        return View::make($this->view('creat'), array('links' => $this->links));
+        return View::make($this->view('create'), array('links' => $this->links));
     }
 
     /**
@@ -134,7 +143,7 @@ class UserAdminController extends AdminController {
      */
     public function login()
     {
-        if( Confide::user() )
+        if( Auth::user() )
         {
             // If user is logged, redirect to internal 
             // page, change it to '/admin', '/dashboard' or something
@@ -162,7 +171,7 @@ class UserAdminController extends AdminController {
         // If you wish to only allow login from confirmed users, call logAttempt
         // with the second parameter as true.
         // logAttempt will check if the 'email' perhaps is the username.
-        if ( Confide::logAttempt( $input ) ) 
+        if ( App::make('confide')->logAttempt( $input ) ) 
         {
             // If the session 'loginRedirect' is set, then redirect
             // to that route. Otherwise redirect to '/'

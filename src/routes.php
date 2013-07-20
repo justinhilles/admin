@@ -1,6 +1,6 @@
 <?php
 
-Route::group(array('prefix' => 'admin', 'before' => ''), function() {
+Route::group(array('prefix' => 'admin', 'before' => 'auth'), function() {
 
 	//User Management
 	Route::resource('users', 'Justinhilles\Admin\Controllers\UserAdminController');
