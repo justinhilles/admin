@@ -12,6 +12,12 @@ class AdminController extends Controller {
 
 	protected $routes = null;
 
+    protected $per_page = 10;
+
+    public function __construct()
+    {
+        $this->per_page = Config::get('cms::config.admin.per_page');
+    }
     protected function view($view, $format = '%s.%s')
     {
         return sprintf($format, $this->views, $view);
