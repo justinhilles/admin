@@ -5,18 +5,20 @@
         @stylesheets('admin')
     </head>
     <body>
-        <div class="navbar navbar-inverse navbar-fixed-top">
-          <div class="navbar-inner">
-              <div class="container">
-                @include('admin::global.nav')
-              </div>
+        @if(Auth::user())
+          <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                  @include('admin::global.nav')
+                </div>
+            </div>
           </div>
-        </div>
+        @endif
         <div id="main" class="container">
-              @include('admin::global.flash')
-              @section('top')
-                @include('admin::global.top', compact('links'))
-              @show
+            @include('admin::global.flash')
+            @section('top')
+              @include('admin::global.top', compact('links'))
+            @show
             @yield('main')
        	</div>
         @javascripts('admin')

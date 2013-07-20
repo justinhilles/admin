@@ -31,9 +31,7 @@
     <div class="control-group">
         {{ Form::label('role', 'Role:', array('class' => 'control-label')) }}
         <div class="controls">
-            <?php $values = isset($user) ? $user->getRoleIds() : array();?>
-
-            {{ Form::collection('roles', \App\Models\Role::all(), $values, array('key' => 'name', 'expand' => true)) }}
+            {{ Form::collection('roles', Role::all(), isset($user) ? $user->getRoleIds() : array(), array('key' => 'name', 'expand' => true)) }}
         </div>
     </div>
 
