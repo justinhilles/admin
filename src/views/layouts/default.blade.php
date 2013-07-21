@@ -13,9 +13,9 @@
                 </div>
             </div>
           </div>
+          @include('admin::global.flash')
         @endif
         <div id="main" class="container">
-            @include('admin::global.flash')
             @section('top')
               @include('admin::global.top', compact('links'))
             @show

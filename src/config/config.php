@@ -1,15 +1,17 @@
 <?php
 
 return array(
-	'prefix' => '/admin',
+	'prefix' => 'admin',
 	'title' => 'Admin',
+	
 	'aliases' => array(
 		'User' 		=> 'Justinhilles\Admin\Models\User',
 		'Role' 		=> 'Justinhilles\Admin\Models\Role',
 		'Permission'=> 'Justinhilles\Admin\Models\Permission',
 		'Confide' 	=> 'Zizaco\Confide\ConfideFacade',
-		'UserAdminController' => 'Justinhilles\Admin\Controllers\UserAdminController',
-		'AdminController' => 'Justinhilles\Admin\Controllers\AdminController'
+		'UserAdminController' => 'Justinhilles\Admin\Controllers\Admin\UserAdminController',
+		'AdminController' => 'Justinhilles\Admin\Controllers\Admin\AdminController',
+		'UserController' => 'Justinhilles\Admin\Controllers\UserController'
 	),
 	'providers' => array(
 		'Zizaco\Confide\ConfideServiceProvider',

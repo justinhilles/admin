@@ -39,4 +39,4 @@
 
 {{ Form::close() }}
 
-@include('admin.global.errors', array('errors' => $errors))
+@include('admin::global.errors', array('errors' => $errors))

@@ -48,7 +48,8 @@ class AdminServiceProvider extends ServiceProvider {
 
 	public function loadRoutes()
 	{
-		include __DIR__.'/../../routes.php';
+		include __DIR__.'/../../routes/routes.php';
+		include __DIR__.'/../../filters.php';
 	}
 
 	public function loadCollection()
@@ -99,7 +100,6 @@ class AdminServiceProvider extends ServiceProvider {
 		$aliases = Config::get('admin::config.aliases');
 
 		if(count($aliases)) {
-
 			foreach($aliases as $alias => $original) {
 				if(!class_exists($alias)) {
 					class_alias($original, $alias);
