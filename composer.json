@@ -13,8 +13,7 @@
         "jasonlewis/basset": "dev-master",
         "twitter/bootstrap": "dev-master",
         "leafo/lessphp": "v0.3.9",
-        "zizaco/confide": "dev-master",
-        "zizaco/entrust": "dev-master"
+        "cartalyst/sentry": "2.0.*"
     },
     "autoload": {
         "classmap": [
