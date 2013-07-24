@@ -1,11 +1,4 @@
 {{ Form::tag('admin.users', (isset($user) ? $user : null)) }}
-    
-    <div class="control-group">
-        {{ Form::label('username', 'Username:', array('class' => 'control-label')) }}
-        <div class="controls">
-        	{{ Form::text('username') }}
-        </div>
-    </div>
 
 	<div class="control-group">
         {{ Form::label('email', 'Email:', array('class' => 'control-label')) }}
@@ -25,13 +18,6 @@
         {{ Form::label('password_confirmation', 'Confirm Password:', array('class' => 'control-label')) }}
         <div class="controls">
         	{{ Form::password('password_confirmation') }}
-        </div>
-    </div>
-
-    <div class="control-group">
-        {{ Form::label('role', 'Role:', array('class' => 'control-label')) }}
-        <div class="controls">
-            {{ Form::collection('roles', Role::all(), isset($user) ? $user->getRoleIds() : array(), array('key' => 'name', 'expand' => true)) }}
         </div>
     </div>
 

@@ -4,20 +4,27 @@ class UsersTableSeeder extends Seeder {
 
     public function run()
     {
-    	// Uncomment the below to wipe the table clean before populating
-    	// DB::table('pages')->delete();
+        DB::table('users')->delete();
+        DB::table('groups')->delete();
+        DB::table('users_groups')->delete();
 
-        $users = array(
-        	array(
-        		'username' => 'admin', 
-        		'password' => Hash::make('password'), 
-        		'email' => 'admin@admin.com'),
+        Sentry::getUserProvider()->create(array(
+            'email' => 'admin@admin.com',
+            'password' => "admin",
+            'first_name' => 'John',
+            'last_name' => 'McClane',
+            'activated' => 1,
+        ));
 
+        Sentry::getGroupProvider()->create(array(
+            'name' => 'Admin',
+            'permissions' => array('admin' => 1),
+        ));
 
-        );
-
-        // Uncomment the below to run the seeder
-        DB::table('users')->insert($users);
+        // Assign user permissions
+        $adminUser = Sentry::getUserProvider()->findByLogin('admin@admin.com');
+        $adminGroup = Sentry::getGroupProvider()->findByName('Admin');
+        $adminUser->addGroup($adminGroup);
     }
 
 }

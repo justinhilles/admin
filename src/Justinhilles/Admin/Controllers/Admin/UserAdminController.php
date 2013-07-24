@@ -4,7 +4,6 @@ namespace Justinhilles\Admin\Controllers\Admin;
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\View;
-use Zizaco\Confide\ConfideFacade as Confide;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\App;
@@ -27,19 +26,19 @@ class UserAdminController extends AdminController {
 
     public static function getLinks()
     {
-        return (array) array('Users' => Config::get('admin::dashboard.fieldsets.Admin.Users')) + (array) Config::get('admin::dashboard.fieldsets.Admin.Users.children');
+        return (array) array('Users' => \Config::get('admin::dashboard.fieldsets.Admin.Users')) + (array) \Config::get('admin::dashboard.fieldsets.Admin.Users.children');
     }
 
     public function index()
     {
         $users = $this->user->paginate(10);
 
-        return View::make($this->view('index'), array('users' => $users, 'links' => $this->links));        
+        return \View::make($this->view('index'), array('users' => $users, 'links' => $this->links));        
     }
 
     public function dashboard()
     {
-        return View::make($this->view('dashboard'));
+        return \View::make($this->view('dashboard'));
     }
 
     /**
@@ -47,7 +46,7 @@ class UserAdminController extends AdminController {
      */
     public function create()
     {
-        return View::make($this->view('create'), array('links' => $this->links));
+        return \View::make($this->view('create'), array('links' => $this->links));
     }
 
     /**
@@ -55,40 +54,26 @@ class UserAdminController extends AdminController {
      */
     public function store()
     {
-        $user = $this->user;
-
-        $user->username = Input::get( 'username' );
-        $user->email = Input::get( 'email' );
-        $user->password = Input::get( 'password' );
-
-        // The password confirmation will be removed from model
-        // before saving. This field will be used in Ardent's
-        // auto validation.
-        $user->password_confirmation = Input::get( 'password_confirmation' );
-
-
-        // Save if valid. Password field will be hashed before save
-        $user->save();
-
-        if ( $user->id )
+        try
         {
-            if($role = Input::get('role'))
-            {
-                $user->roles()->attach($role);
-            }
- 
-            return Redirect::action('UserAdminController@login')
-                ->with( 'notice', Lang::get('confide::confide.alerts.account_created') );
-        }
-        else
-        {
-            // Get validation errors (see Ardent package)
-            $error = $user->errors()->all(':message');
+            $user = \Sentry::getUserProvider()->create(\Input::only('email', 'password'));
 
-            return Redirect::action('UserAdminController@create')
-                    ->withInput(Input::except('password'))
-                    ->with( 'error', $error );
+            return \Redirect::route('admin.users.edit', array($user->id))->with( 'success' , 'User Created');
         }
+        catch (\Cartalyst\Sentry\Users\LoginRequiredException $e)
+        {
+            $error = 'Login field is required.';
+        }
+        catch (\Cartalyst\Sentry\Users\PasswordRequiredException $e)
+        {
+            $error =  'Password field is required.';
+        }
+        catch (\Cartalyst\Sentry\Users\UserExistsException $e)
+        {
+            $error =  'User with this login already exists.';
+        }
+
+        return \Redirect::route($this->route('create'))->with( 'error', $error );
     }
 
     /**
@@ -99,14 +84,14 @@ class UserAdminController extends AdminController {
      */
     public function edit($id)
     {
-        $user = User::find($id);
+        $user = \Sentry::getUserProvider()->findById($id);
 
         if (is_null($user))
         {
-            return Redirect::route($this->route('index'));
+            return \Redirect::route($this->route('index'));
         }
 
-        return View::make($this->view('edit'), array('user' => $user, 'links' => $this->links));
+        return \View::make($this->view('edit'), array('user' => $user, 'links' => $this->links));
     }
 
     /**
@@ -117,23 +102,30 @@ class UserAdminController extends AdminController {
      */
     public function update($id)
     {
-        $input = array_except(Input::all(), array('_method'));
-        $user = User::find($id);
-
-        $user->email = $input['email'];
-        $user->username = $input['username'];
-        $user->password = $input['password'];
-        $user->password_confirmation = $input['password_confirmation'];
-        $user->roles()->sync((array) Input::get('roles'));
-        
-        if($user->amend())
+        try
         {
-            return Redirect::route('admin.users.index');
+            $user = \Sentry::getUserProvider()->findById($id);
+
+            $user->update(\Input::except('_token', 'password_confirmation'));
+
+            return \Redirect::route($this->route('edit'), $id)->with('success', 'User Updated');
+        }
+        catch (\Cartalyst\Sentry\Users\UserExistsException $e)
+        {
+            $error = 'User with this login already exists.';
+        }
+        catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
+        {
+            $error = 'User was not found.';
+        }
+        catch(\Exception $e)
+        {
+            $error = $e->getMessage();
         }
 
-        return Redirect::route('admin.users.edit', $id)
+        return \Redirect::route($this->route('edit'), $id)
             ->withInput()
-            ->with('message', 'There were validation errors.');
+            ->with('error', $error);
     }
 
     /**
@@ -144,8 +136,20 @@ class UserAdminController extends AdminController {
      */
     public function destroy($id)
     {
-        User::find($id)->delete();
+        try
+        {
+            // Find the user using the user id
+            $user = \Sentry::getUserProvider()->findById($id);
 
-        return Redirect::route($this->route('index'));
+            // Delete the user
+            $user->delete();
+
+            //Return to user home
+            return \Redirect::route('admin.users.index')->with('success', 'User deleted');
+        }
+        catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
+        {
+            return \Redirect::route('admin.users.index')->with('error', 'User not found');
+        }
     }
 }

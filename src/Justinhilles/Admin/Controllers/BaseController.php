@@ -17,7 +17,7 @@ class BaseController extends Controller {
 
     protected function route($route, $format = '%s.%s')
     {
-    	return sprint($format, $this->routes, $route);
+    	return sprintf($format, $this->routes, $route);
     }
 
     /**

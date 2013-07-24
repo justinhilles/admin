@@ -8,14 +8,13 @@ return array(
 		'User' 		=> 'Justinhilles\Admin\Models\User',
 		'Role' 		=> 'Justinhilles\Admin\Models\Role',
 		'Permission'=> 'Justinhilles\Admin\Models\Permission',
-		'Confide' 	=> 'Zizaco\Confide\ConfideFacade',
+		'Sentry' 	=> 'Cartalyst\Sentry\Facades\Laravel\Sentry',
 		'UserAdminController' => 'Justinhilles\Admin\Controllers\Admin\UserAdminController',
 		'AdminController' => 'Justinhilles\Admin\Controllers\Admin\AdminController',
-		'UserController' => 'Justinhilles\Admin\Controllers\UserController'
+		'AuthController' => 'Justinhilles\Admin\Controllers\AuthController'
 	),
 	'providers' => array(
-		'Zizaco\Confide\ConfideServiceProvider',
-		'Zizaco\Entrust\EntrustServiceProvider',
+		'Cartalyst\Sentry\SentryServiceProvider',
 		'Basset\BassetServiceProvider'
 	),
 	'stylesheets' => array(

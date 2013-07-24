@@ -2,40 +2,9 @@
 
 namespace Justinhilles\Admin\Models;
 
-use Zizaco\Confide\ConfideUser;
-use Zizaco\Entrust\HasRole;
+use Illuminate\Database\Eloquent\Model;
 
-class User extends ConfideUser 
-{
-	use HasRole;
-	
+class User extends Model 
+{	
 	protected $table = 'users';
-
-	public function role()
-	{
-		return $this->roles()->first();
-	}
-
-	public function getRoleId()
-	{
-		$role = $this->role();
-
-		if(!is_null($role))
-		{
-			return $role->id;
-		}
-
-		return null;
-	}
-
-	public function getRoleIds()
-	{
-		$roles = $this->roles()->get();
-
-		if(!is_null($roles))
-		{
-			return $roles->lists('id');
-		}
-		return array();
-	}
 }

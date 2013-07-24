@@ -2,14 +2,11 @@
 
 namespace Justinhilles\Admin\Models;
 
-use Zizaco\Entrust\EntrustRole;
+use Illuminate\Database\Eloquent\Model;
 
-class Role extends EntrustRole
+class Role extends Model
 {
+	protected $table = 'roles';
+	
  	protected $guarded = array();
-
- 	public function getDisplayPermissions()
- 	{
- 		return implode(", ", $this->perms()->lists('display_name'));
- 	}
 }

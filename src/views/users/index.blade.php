@@ -7,7 +7,6 @@
             <thead>
                 <tr>
                     <th></th>
-                    <th>Username</th>
     				<th>Email</th>
                     <th>Edit</th>
                     <th>Delete</th>
@@ -18,7 +17,6 @@
                 @foreach ($users as $user)
                     <tr>
                     	<td></td>
-                        <td>{{ $user->username }}</td>
                         <td>{{ $user->email }}</td>
                         <td>{{ link_to_route('admin.users.edit', 'Edit', array($user->id), array('class' => 'btn btn-info')) }}</td>
                         <td>
