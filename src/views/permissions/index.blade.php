@@ -8,16 +8,16 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Display_name</th>
-                    <th>slug</th>
+                    <th>Name</th>
+                    <th>Slug</th>
                 </tr>
             </thead>
 
             <tbody>
                 @foreach ($permissions as $permission)
                     <tr>
-                        <td>{{{ $permission->display_name }}}</td>
                         <td>{{{ $permission->name }}}</td>
+                        <td>{{{ $permission->slug }}}</td>
                         <td>{{ link_to_route('admin.permissions.edit', 'Edit', array($permission->id), array('class' => 'btn btn-info')) }}</td>
                         <td>
                             {{ Form::open(array('method' => 'DELETE', 'route' => array('admin.permissions.destroy', $permission->id))) }}

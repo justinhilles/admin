@@ -21,8 +21,8 @@ return array(
 				'icon' => 'icon-user',
 				'route' => 'admin.users.index',
 				'children' => array(
-					'Roles' => array(
-						'route' => 'admin.roles.index',
+					'Groups' => array(
+						'route' => 'admin.groups.index',
 						'icon' => ''
 					),
 					'Permissions' => array(

@@ -2,15 +2,7 @@
 
 namespace Justinhilles\Admin\Controllers\Admin;
 
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\App;
 use Justinhilles\Admin\Models\User;
-use Illuminate\Support\Facades\Lang;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Session;
 
 class UserAdminController extends AdminController {
 
@@ -31,7 +23,7 @@ class UserAdminController extends AdminController {
 
     public function index()
     {
-        $users = $this->user->paginate(10);
+        $users = $this->user->paginate(\Config::get('admin::config.per_page'));
 
         return \View::make($this->view('index'), array('users' => $users, 'links' => $this->links));        
     }
@@ -56,9 +48,18 @@ class UserAdminController extends AdminController {
     {
         try
         {
-            $user = \Sentry::getUserProvider()->create(\Input::only('email', 'password'));
+            $input = \Input::only('email', 'password', 'first_name', 'last_name', 'password_confirmation');
 
-            return \Redirect::route('admin.users.edit', array($user->id))->with( 'success' , 'User Created');
+            $validator = \Validator::make($input, User::$rules);
+
+            if($validator->passes())
+            {
+                $user = \Sentry::getUserProvider()->create(array_except($input, 'password_confirmation'));
+
+                return \Redirect::route('admin.users.edit', array($user->id))->with( 'success' , 'User Created');
+            }
+
+            throw new \Exception($validator->messages());
         }
         catch (\Cartalyst\Sentry\Users\LoginRequiredException $e)
         {
@@ -72,8 +73,12 @@ class UserAdminController extends AdminController {
         {
             $error =  'User with this login already exists.';
         }
+        catch(\Exception $e)
+        {
+            $error = $e->getMessage();
+        }
 
-        return \Redirect::route($this->route('create'))->with( 'error', $error );
+        return \Redirect::route($this->route('create'))->withInput()->with( 'error', $error );
     }
 
     /**
@@ -106,9 +111,31 @@ class UserAdminController extends AdminController {
         {
             $user = \Sentry::getUserProvider()->findById($id);
 
-            $user->update(\Input::except('_token', 'password_confirmation'));
+            $input = \Input::except('_token', 'groups');
 
-            return \Redirect::route($this->route('edit'), $id)->with('success', 'User Updated');
+            $validator = \Validator::make($input, User::$rules);
+
+            if($validator->passes())
+            {
+                foreach($user->getGroups() as $group) 
+                {
+                    $user->removeGroup($group);
+                }
+
+                if($groups = \Input::get('groups')) 
+                {
+                    foreach($groups as $group_id)
+                    {
+                        $group = \Sentry::getGroupProvider()->findById($group_id);
+
+                        $user->addGroup($group);                   
+                    }
+                }
+
+                $user->update($input);
+
+                return \Redirect::route($this->route('edit'), $id)->with('success', 'User Updated');
+            }
         }
         catch (\Cartalyst\Sentry\Users\UserExistsException $e)
         {

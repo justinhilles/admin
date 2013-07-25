@@ -3,7 +3,6 @@
 namespace Justinhilles\Admin\Controllers\Admin;
 
 use Justinhilles\Admin\Models\Permission;
-use Illuminate\Support\Facades\View;
 
 class PermissionsAdminController extends AdminController {
 
@@ -22,7 +21,7 @@ class PermissionsAdminController extends AdminController {
     {
         $this->permission = $permission;
         
-        $this->links = UserAdminController::getLinks();
+        $this->links = \Justinhilles\Admin\Controllers\Admin\UserAdminController::getLinks();
     }
 
     /**
@@ -34,7 +33,7 @@ class PermissionsAdminController extends AdminController {
     {
         $permissions = $this->permission->all();
 
-        return View::make($this->view('index'),  array('permissions' => $permissions, 'links' => $this->links));
+        return \View::make($this->view('index'),  array('permissions' => $permissions, 'links' => $this->links));
     }
 
     /**
@@ -44,7 +43,7 @@ class PermissionsAdminController extends AdminController {
      */
     public function create()
     {
-        return View::make($this->view('create'), array('links' => $this->links));
+        return \View::make($this->view('create'), array('links' => $this->links));
     }
 
     /**
@@ -54,17 +53,17 @@ class PermissionsAdminController extends AdminController {
      */
     public function store()
     {
-        $input = Input::all();
-        $validation = Validator::make($input, Permission::$rules);
+        $input = \Input::all();
+        $validation = \Validator::make($input, Permission::$rules);
 
         if ($validation->passes())
         {
             $this->permission->create($input);
 
-            return Redirect::route($this->route('index'));
+            return \Redirect::route($this->route('index'));
         }
 
-        return Redirect::route($this->route('create'))
+        return \Redirect::route($this->route('create'))
             ->withInput()
             ->withErrors($validation)
             ->with('message', 'There were validation errors.');
@@ -80,7 +79,7 @@ class PermissionsAdminController extends AdminController {
     {
         $permission = $this->permission->findOrFail($id);
 
-        return View::make($this->view('show'), compact('permission'));
+        return \View::make($this->view('show'), compact('permission'));
     }
 
     /**
@@ -95,10 +94,10 @@ class PermissionsAdminController extends AdminController {
 
         if (is_null($permission))
         {
-            return Redirect::route($this->route('index'));
+            return \Redirect::route($this->route('index'));
         }
 
-        return View::make($this->view('edit'), array('permission' => $permission, 'links' => $this->links));
+        return \View::make($this->view('edit'), array('permission' => $permission, 'links' => $this->links));
     }
 
     /**
@@ -109,18 +108,18 @@ class PermissionsAdminController extends AdminController {
      */
     public function update($id)
     {
-        $input = array_except(Input::all(), '_method');
-        $validation = Validator::make($input, Permission::$rules);
+        $input = array_except(\Input::all(), '_method');
+        $validation = \Validator::make($input, Permission::$rules);
 
         if ($validation->passes())
         {
             $permission = $this->permission->find($id);
             $permission->update($input);
 
-            return Redirect::route($this->route('index'));
+            return \Redirect::route($this->route('index'));
         }
 
-        return Redirect::route($this->route('edit'), $id)
+        return \Redirect::route($this->route('edit'), $id)
             ->withInput()
             ->withErrors($validation)
             ->with('message', 'There were validation errors.');
@@ -136,7 +135,7 @@ class PermissionsAdminController extends AdminController {
     {
         $this->permission->find($id)->delete();
 
-        return Redirect::route($this->route('index'));
+        return \Redirect::route($this->route('index'));
     }
 
 }

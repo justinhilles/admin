@@ -8,9 +8,9 @@
     </div>
     
     <div class="control-group">      
-         {{ Form::label('display_name', 'Display_name:', array('class' => 'control-label')) }}
+         {{ Form::label('slug', 'Slug:', array('class' => 'control-label')) }}
          <div class="controls">
-            {{ Form::text('display_name') }}
+            {{ Form::text('slug') }}
         </div>
     </div>
 

@@ -4,11 +4,10 @@ Route::group(array('prefix' => 'admin', 'before' => 'auth'), function() {
 
 	//User Management
 	Route::resource('users', 'Justinhilles\Admin\Controllers\Admin\UserAdminController');
-	Route::resource('roles', 'Justinhilles\Admin\Controllers\Admin\RolesAdminController');
+	Route::resource('groups', 'Justinhilles\Admin\Controllers\Admin\GroupsAdminController');
 	Route::resource('permissions', 'Justinhilles\Admin\Controllers\Admin\PermissionsAdminController');
-
 	//Dashboard
-	Route::get('/', array('as' => 'admin.dashboard' , 'uses' => 'UserAdminController@dashboard'));
+	Route::get('/', array('as' => 'admin.dashboard' , 'uses' => 'Justinhilles\Admin\Controllers\Admin\UserAdminController@dashboard'));
 });
 
 Route::group(array('prefix' => 'admin'), function() {

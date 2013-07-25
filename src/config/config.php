@@ -3,13 +3,12 @@
 return array(
 	'prefix' => 'admin',
 	'title' => 'Admin',
-	
+	'per_page' => 10,
 	'aliases' => array(
 		'User' 		=> 'Justinhilles\Admin\Models\User',
-		'Role' 		=> 'Justinhilles\Admin\Models\Role',
+		'Group' 		=> 'Justinhilles\Admin\Models\Group',
 		'Permission'=> 'Justinhilles\Admin\Models\Permission',
 		'Sentry' 	=> 'Cartalyst\Sentry\Facades\Laravel\Sentry',
-		'UserAdminController' => 'Justinhilles\Admin\Controllers\Admin\UserAdminController',
 		'AdminController' => 'Justinhilles\Admin\Controllers\Admin\AdminController',
 		'AuthController' => 'Justinhilles\Admin\Controllers\AuthController'
 	),
