@@ -12,4 +12,23 @@ class User extends Model
 		'email' => 'required',
 		'password' => 'required|confirmed'
 	);
+
+	public function removeAllGroups()
+	{
+		$instance = new static;
+		foreach($instance->getGroups() as $group) 
+		{
+			$instance->removeGroup($group);
+		}
+	}
+
+	public function addGroups($groups)
+	{
+		foreach($groups as $group_id)
+		{
+			$group = \Sentry::getGroupProvider()->findById($group_id);
+
+			$user->addGroup($group);                   
+		}
+	}
 }

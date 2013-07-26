@@ -8,7 +8,6 @@
                 @include('admin::global.flash')
                 {{ Form::text('email', null, array('placeholder' => 'Username')) }}
                 {{ Form::password('password', array('placeholder' => 'Password')) }}
-                <p>{{ link_to_route('admin.forgot', 'Forgot?') }}</p>
                 <button class="btn btn-primary" type="submit">Login</button>
             {{ Form::close() }}
         </div>

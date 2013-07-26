@@ -18,7 +18,8 @@
     "autoload": {
         "classmap": [
             "src/views",
-            "src/migrations"
+            "src/migrations",
+            "src/commands"
         ],
         "files": [
             "src/helpers/admin.php"

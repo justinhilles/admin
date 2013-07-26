@@ -109,7 +109,7 @@ class UserAdminController extends AdminController {
     {
         try
         {
-            $user = \Sentry::getUserProvider()->findById($id);
+            $user = $this->user->findOrFail($id);
 
             $input = \Input::except('_token', 'groups');
 
@@ -117,25 +117,19 @@ class UserAdminController extends AdminController {
 
             if($validator->passes())
             {
-                foreach($user->getGroups() as $group) 
-                {
-                    $user->removeGroup($group);
-                }
+                $user->removeAllGroups();
 
                 if($groups = \Input::get('groups')) 
                 {
-                    foreach($groups as $group_id)
-                    {
-                        $group = \Sentry::getGroupProvider()->findById($group_id);
-
-                        $user->addGroup($group);                   
-                    }
+                    $user->addGroups($groups);
                 }
 
                 $user->update($input);
 
                 return \Redirect::route($this->route('edit'), $id)->with('success', 'User Updated');
             }
+
+            return \Redirect::route($this->route('edit'), $id)->with('error', $validator->messages());
         }
         catch (\Cartalyst\Sentry\Users\UserExistsException $e)
         {
@@ -144,10 +138,6 @@ class UserAdminController extends AdminController {
         catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
         {
             $error = 'User was not found.';
-        }
-        catch(\Exception $e)
-        {
-            $error = $e->getMessage();
         }
 
         return \Redirect::route($this->route('edit'), $id)

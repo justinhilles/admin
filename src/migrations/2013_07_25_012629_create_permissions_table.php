@@ -16,7 +16,7 @@ class CreatePermissionsTable extends Migration {
 			$t->increments('id');
 			$t->string('name');
 			$t->string('slug');
-			 $t->timestamps();
+			$t->timestamps();
 		});		//
 	}
 
