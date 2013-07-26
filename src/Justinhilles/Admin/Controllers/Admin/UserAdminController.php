@@ -48,7 +48,7 @@ class UserAdminController extends AdminController {
     {
         try
         {
-            $input = \Input::only('email', 'first_name', 'last_name', 'password', 'password_confirmation');
+            $input = \Input::only('email', 'first_name', 'last_name', 'password', 'password_confirmation', 'groups', 'permissions');
 
             $validator = \Validator::make($input, User::$rules);
 
@@ -122,6 +122,10 @@ class UserAdminController extends AdminController {
                 if($groups = \Input::get('groups')) 
                 {
                     $user->addGroups($groups);
+                }
+
+                if($permissions = \Input::get('permissions')) {
+                    $input['permissions'] = array_fill_keys(array_values($permissions), 1);
                 }
 
                 if($password = \Input::get('password'))

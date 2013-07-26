@@ -1,5 +1,5 @@
 <?php
 
 function has_access_to_link($link) {
-	return (boolean) (isset($link['role']) AND  Sentry::check());
+	return (boolean) (isset($link['role']) AND  Sentry::check() AND Sentry::getUser()->hasAccess('admin'));
 }

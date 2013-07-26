@@ -1,4 +1,3 @@
-
 {{ Form::tag('admin.users', (isset($user) ? $user : null)) }}
 
     <div class="control-group">
@@ -47,6 +46,13 @@
         {{ Form::label('groups', 'Groups:', array('class' => 'control-label')) }}
         <div class="controls">
             {{ Form::checkboxes('groups', isset($user) ? $user->getGroups()->lists('id') : array(), \Justinhilles\Admin\Models\Group::all()->lists('name', 'id')) }}
+        </div>
+    </div>
+
+    <div class="control-group">
+        {{ Form::label('permissions', 'Permissions:', array('class' => 'control-label')) }}
+        <div class="controls">
+            {{ Form::checkboxes('permissions', isset($user) ? array_keys($user->permissions) : array(), \Justinhilles\Admin\Models\Permission::all()->lists('name', 'slug')) }}
         </div>
     </div>
 
