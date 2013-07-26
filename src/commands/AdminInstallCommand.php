@@ -1,6 +1,6 @@
 <?php
 
-namespace Justinhilles\Cms;
+namespace Justinhilles\Admin;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
