@@ -3,7 +3,6 @@
 namespace Justinhilles\Admin\Controllers;
 
 use Justinhilles\Admin\Controllers\BaseController;
-use Justinhilles\Admin\Models\User;
 
 class AuthController extends BaseController {
 
@@ -22,7 +21,7 @@ class AuthController extends BaseController {
      */
     public function login()
     {
-        if( \Sentry::getUser() ) {
+        if( \Sentry::check() ) {
             return \Redirect::route('admin.dashboard');
         } else {
             return \View::make($this->view('login'));
@@ -77,7 +76,7 @@ class AuthController extends BaseController {
      */
     public function logout()
     {
-        Sentry::logout();
+        \Sentry::logout();
         
         return \Redirect::to(\Config::get('admin::config.prefix'));
     }

@@ -4,6 +4,7 @@ return array(
 	'prefix' => 'admin',
 	'title' => 'Admin',
 	'per_page' => 10,
+	'collection' => 'admin',
 	'commands' => array(
 		'command.admin.install' => 'Justinhilles\Admin\Commands\AdminInstallCommand'
 	),

@@ -16,7 +16,7 @@
             <tbody>
                 @foreach ($users as $user)
                     <tr>
-                    	<td></td>
+                    	<td>{{ $user->isActivated() ? '<i class="icon-ok btn-success btn"></i>':'<i class="icon-remove btn-danger btn"></i>'  }}</td>
                         <td>{{ $user->email }}</td>
                         <td>{{ link_to_route('admin.users.edit', 'Edit', array($user->id), array('class' => 'btn btn-info')) }}</td>
                         <td>

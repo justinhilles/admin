@@ -48,13 +48,13 @@ class UserAdminController extends AdminController {
     {
         try
         {
-            $input = \Input::only('email', 'password', 'first_name', 'last_name', 'password_confirmation');
+            $input = \Input::only('email', 'first_name', 'last_name', 'password', 'password_confirmation');
 
             $validator = \Validator::make($input, User::$rules);
 
             if($validator->passes())
             {
-                $user = \Sentry::getUserProvider()->create(array_except($input, 'password_confirmation'));
+                $user = $this->user->create(array_except($input, 'password_confirmation'));
 
                 return \Redirect::route('admin.users.edit', array($user->id))->with( 'success' , 'User Created');
             }
@@ -111,7 +111,7 @@ class UserAdminController extends AdminController {
         {
             $user = $this->user->findOrFail($id);
 
-            $input = \Input::except('_token', 'groups');
+            $input = \Input::except('_token', 'groups','password', 'password_confirmation');
 
             $validator = \Validator::make($input, User::$rules);
 
@@ -122,6 +122,21 @@ class UserAdminController extends AdminController {
                 if($groups = \Input::get('groups')) 
                 {
                     $user->addGroups($groups);
+                }
+
+                if($password = \Input::get('password'))
+                {
+                    $password_validator = \Validator::make(\Input::only('password', 'password_confirmation'), array('password' => 'required|confirmed'));
+
+                    if($password_validator->passes()) {
+                        $input = array_merge($input, \Input::only('password'));
+                    }else{
+                        throw new \Exception('Passwords do not match');
+                    }
+                }
+
+                if(!isset($input['activated'])) {
+                    $input['activated'] = 0;
                 }
 
                 $user->update($input);
@@ -138,6 +153,10 @@ class UserAdminController extends AdminController {
         catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
         {
             $error = 'User was not found.';
+        }
+        catch(\Exception $e)
+        {
+            $error = $e->getMessage();
         }
 
         return \Redirect::route($this->route('edit'), $id)
