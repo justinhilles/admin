@@ -1,6 +1,6 @@
 <?php
 
-namespace Justinhilles\Admin;
+namespace Justinhilles\Admin\Commands;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
@@ -23,7 +23,7 @@ class AdminInstallCommand extends Command {
 
     public function fire()
     {
-        $this->call('asset:publish', array('--package' => self::PACKAGE));
+        $this->call('asset:publish', array('package' => self::PACKAGE));
         $this->call('migrate', array('--package' => self::PACKAGE)); 
         $this->call('migrate', array('--package' => 'cartalyst/sentry'));       
     }

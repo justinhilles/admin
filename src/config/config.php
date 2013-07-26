@@ -4,6 +4,9 @@ return array(
 	'prefix' => 'admin',
 	'title' => 'Admin',
 	'per_page' => 10,
+	'commands' => array(
+		'command.admin.install' => 'Justinhilles\Admin\Commands\AdminInstallCommand'
+	),
 	'aliases' => array(
 		'User' 		=> 'Justinhilles\Admin\Models\User',
 		'Group' 		=> 'Justinhilles\Admin\Models\Group',

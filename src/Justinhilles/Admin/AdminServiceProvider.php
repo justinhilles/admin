@@ -39,6 +39,8 @@ class AdminServiceProvider extends ServiceProvider {
 		$this->loadCollection();
 
 		$this->loadRoutes();
+
+		$this->registerCommands();
 	}
 
 	public function loadConfig()
@@ -109,4 +111,19 @@ class AdminServiceProvider extends ServiceProvider {
 		}
 	}
 
+	/** register the custom commands **/
+	public function registerCommands()
+	{
+		$commands = Config::get('admin::config.commands');
+
+		if(count($commands) > 0) {
+			foreach($commands as $alias => $class) {
+				$this->app[$alias] = $this->app->share(function($app) use ($class) {
+					return new $class;
+				});
+
+				$this->commands($alias);				
+			}
+		}
+	}
 }
