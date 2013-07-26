@@ -1,3 +1,4 @@
+
 {{ Form::tag('admin.users', (isset($user) ? $user : null)) }}
 
     <div class="control-group">
@@ -42,14 +43,12 @@
         </div>
     </div>
 
-    <?php if(isset($user) AND $groups = $user->getGroups()->lists('id')):?>
-        <div class="control-group">
-            {{ Form::label('name', 'Name:', array('class' => 'control-label')) }}
-            <div class="controls">
-                {{ Form::checkboxes('groups', $groups, \Justinhilles\Admin\Models\Group::all()->lists('name', 'id')) }}
-            </div>
+    <div class="control-group">
+        {{ Form::label('groups', 'Groups:', array('class' => 'control-label')) }}
+        <div class="controls">
+            {{ Form::checkboxes('groups', isset($user) ? $user->getGroups()->lists('id') : array(), \Justinhilles\Admin\Models\Group::all()->lists('name', 'id')) }}
         </div>
-    <?php endif;?>
+    </div>
 
     {{ Form::buttons('admin.users.index')}}
 

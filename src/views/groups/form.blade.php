@@ -8,12 +8,12 @@
     </div>
 
     @if(isset($group))
-    <div class="control-group">
-        {{ Form::label('name', 'Name:', array('class' => 'control-label')) }}
-        <div class="controls">
-            {{ Form::checkboxes('permissions', array_keys($group->permissions), \Justinhilles\Admin\Models\Permission::all()->lists('name', 'slug')) }}
+        <div class="control-group">
+            {{ Form::label('name', 'Name:', array('class' => 'control-label')) }}
+            <div class="controls">
+                {{ Form::checkboxes('permissions', array_keys($group->permissions), \Justinhilles\Admin\Models\Permission::all()->lists('name', 'slug')) }}
+            </div>
         </div>
-    </div>
     @endif
 
     {{ Form::buttons('admin.groups.index')}}

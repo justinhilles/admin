@@ -8,6 +8,9 @@
                 <tr>
                     <th></th>
     				<th>Email</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Groups</th>
                     <th>Edit</th>
                     <th>Delete</th>
                 </tr>
@@ -18,6 +21,9 @@
                     <tr>
                     	<td>{{ $user->isActivated() ? '<i class="icon-ok btn-success btn"></i>':'<i class="icon-remove btn-danger btn"></i>'  }}</td>
                         <td>{{ $user->email }}</td>
+                        <td>{{ $user->first_name }}</td>
+                        <td>{{ $user->last_name }}</td>
+                        <td>{{ implode(", ", $user->getGroups()->lists('name')) }}</td>
                         <td>{{ link_to_route('admin.users.edit', 'Edit', array($user->id), array('class' => 'btn btn-info')) }}</td>
                         <td>
                             {{ Form::open(array('method' => 'DELETE', 'route' => array('admin.users.destroy', $user->id))) }}

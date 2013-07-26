@@ -63,6 +63,8 @@ class GroupsAdminController extends AdminController {
             {
                 if(isset($input['permissions'])){
                     $input['permissions'] = array_fill_keys(array_values($input['permissions']), 1);
+                } else{
+                    $input['permissions'] = array();
                 }
                 $group = \Sentry::getGroupProvider()->create($input);
 
