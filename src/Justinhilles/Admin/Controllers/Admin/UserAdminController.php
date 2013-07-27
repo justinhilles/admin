@@ -185,11 +185,11 @@ class UserAdminController extends AdminController {
             $user->delete();
 
             //Return to user home
-            return \Redirect::route('admin.users.index')->with('success', 'User deleted');
+            return \Redirect::route($this->route('index'))->with('success', 'User deleted');
         }
         catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
         {
-            return \Redirect::route('admin.users.index')->with('error', 'User not found');
+            return \Redirect::route($this->route('index'))->with('error', 'User not found');
         }
     }
 }
