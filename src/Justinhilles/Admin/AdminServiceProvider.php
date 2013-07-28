@@ -1,8 +1,7 @@
 <?php namespace Justinhilles\Admin;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Config;
+//use Justinhilles\Admin\Providers\AbstractAdminServiceProvider as ServiceProvider;
 
 class AdminServiceProvider extends ServiceProvider {
 
@@ -13,16 +12,6 @@ class AdminServiceProvider extends ServiceProvider {
 	 */
 	protected $defer = false;
 
-
-    /**
-     * Bootstrap the service provider.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        $this->package('justinhilles/admin');
-    }
 	/**
 	 * Register the service provider.
 	 *
@@ -30,7 +19,7 @@ class AdminServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		$this->loadConfig();
+		$this->package('justinhilles/admin');
 
 		$this->loadProviders();
 
@@ -43,11 +32,6 @@ class AdminServiceProvider extends ServiceProvider {
 		$this->registerCommands();
 	}
 
-	public function loadConfig()
-	{
-		$this->app['config']->package('justinhilles/admin', __DIR__.'/../../config');
-	}
-
 	public function loadRoutes()
 	{
 		include __DIR__.'/../../routes/routes.php';
@@ -56,9 +40,9 @@ class AdminServiceProvider extends ServiceProvider {
 
 	public function loadCollection()
 	{
-		App::make('basset')->collection('admin', function($collection) {
+		\App::make('basset')->collection('admin', function($collection) {
 
-			if($stylesheets = Config::get('admin::config.stylesheets')) {
+			if($stylesheets = \Config::get('admin::config.stylesheets')) {
 				foreach($stylesheets as $stylesheet) {
 					$collection->stylesheet($stylesheet);
 				}
@@ -66,7 +50,7 @@ class AdminServiceProvider extends ServiceProvider {
 
 			$collection->stylesheet(__DIR__.'/../../../public/assets/stylesheets/admin.css');
 
-			if($javascripts = Config::get('admin::config.javascripts')) {
+			if($javascripts = \Config::get('admin::config.javascripts')) {
 				foreach($javascripts as $javascript) {
 					$collection->javascript($javascript);
 				}
@@ -88,7 +72,7 @@ class AdminServiceProvider extends ServiceProvider {
 
 	public function loadProviders()
 	{
-		$providers = Config::get('admin::config.providers');
+		$providers = \Config::get('admin::app.providers');
 
 		if(count($providers)) {
 			foreach($providers as $provider) {
@@ -99,7 +83,7 @@ class AdminServiceProvider extends ServiceProvider {
 
 	public function loadAliases()
 	{
-		$aliases = Config::get('admin::config.aliases');
+		$aliases = \Config::get('admin::app.aliases');
 
 		if(count($aliases)) {
 			foreach($aliases as $alias => $original) {
@@ -114,7 +98,7 @@ class AdminServiceProvider extends ServiceProvider {
 	/** register the custom commands **/
 	public function registerCommands()
 	{
-		$commands = Config::get('admin::config.commands');
+		$commands = \Config::get('admin::app.commands');
 
 		if(count($commands) > 0) {
 			foreach($commands as $alias => $class) {

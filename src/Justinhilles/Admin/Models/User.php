@@ -74,4 +74,18 @@ class User extends \Cartalyst\Sentry\Users\Eloquent\User implements RemindableIn
 			$this->addGroup($group);                   
 		}
 	}
+
+	public static function hasPermissionToRoute($route) 
+	{
+		if($permission = \Config::get('admin::permissions.'.$route)) {
+			$permission = explode(',', $permission);
+
+			if(!is_array($permission)) {
+				$permission = array($permission);
+			}
+			
+			return \Sentry::getUser()->hasAnyAccess($permission);
+		}
+		return true;
+	}
 }

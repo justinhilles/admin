@@ -3,7 +3,9 @@
 	<ul id="nav" class="nav">
 		@foreach(Config::get('admin::dashboard.fieldsets') as $legend => $fieldset)
 			@foreach($fieldset as $title => $link)
-				<li>{{ link_to_route($link['route'],$title)}}</li>
+				@if(has_access_to_link($link))
+					<li>{{ link_to_route($link['route'],$title)}}</li>
+				@endif
 			@endforeach
 		@endforeach
     </ul>

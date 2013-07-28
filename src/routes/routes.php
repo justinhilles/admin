@@ -1,11 +1,12 @@
 <?php
 
-Route::group(array('prefix' => 'admin', 'before' => 'auth'), function() {
+Route::group(array('prefix' => 'admin', 'before' => 'auth|permission'), function() {
 
 	//User Management
 	Route::resource('users', 'Justinhilles\Admin\Controllers\Admin\UserAdminController');
 	Route::resource('groups', 'Justinhilles\Admin\Controllers\Admin\GroupsAdminController');
 	Route::resource('permissions', 'Justinhilles\Admin\Controllers\Admin\PermissionsAdminController');
+	
 	//Dashboard
 	Route::get('/', array('as' => 'admin.dashboard' , 'uses' => 'Justinhilles\Admin\Controllers\Admin\UserAdminController@dashboard'));
 });

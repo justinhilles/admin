@@ -4,7 +4,6 @@ return array(
 	'fieldsets' => array(
 		'Content' => array(
 			'Pages' => array(
-				'group' => 'User',
 				'icon' => 'icon-file',
 				'route' => 'admin.pages.index',
 				'children' => array(
@@ -17,7 +16,6 @@ return array(
 		),
 		'Admin' => array(
 			'Users' => array(
-				'group' => 'Admin',
 				'icon' => 'icon-user',
 				'route' => 'admin.users.index',
 				'children' => array(

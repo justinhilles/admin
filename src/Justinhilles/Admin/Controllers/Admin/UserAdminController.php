@@ -111,7 +111,7 @@ class UserAdminController extends AdminController {
         {
             $user = $this->user->findOrFail($id);
 
-            $input = \Input::except('_token', 'groups','password', 'password_confirmation');
+            $input = \Input::except('_token', 'groups','password', 'password_confirmation', 'superuser');
 
             $validator = \Validator::make($input, User::$rules);
 
@@ -126,6 +126,8 @@ class UserAdminController extends AdminController {
 
                 if($permissions = \Input::get('permissions')) {
                     $input['permissions'] = array_fill_keys(array_values($permissions), 1);
+                }else{
+                    $input['permissions'] = array_fill_keys(array_keys($user->permissions), 0);
                 }
 
                 if($password = \Input::get('password'))
@@ -141,6 +143,12 @@ class UserAdminController extends AdminController {
 
                 if(!isset($input['activated'])) {
                     $input['activated'] = 0;
+                }
+
+                if(!is_null(\Input::get('superuser'))){
+                    $input['permissions']['superuser'] = 1;
+                }else{
+                    $input['permissions']['superuser'] = 0;
                 }
 
                 $user->update($input);

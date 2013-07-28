@@ -36,10 +36,14 @@
     </div>
 
     <div class="control-group">
-        {{ Form::label('activated', 'Active?:', array('class' => 'control-label')) }}
-        <div class="controls">
-            {{ Form::checkbox('activated') }}
-        </div>
+        <label class="checkbox">
+            {{ Form::checkbox('activated') }} Active?
+        </label>
+    </div>
+    <div class="control-group">
+        <label class="checkbox">
+            {{ Form::checkbox('superuser', '',isset($user) ? $user->isSuperUser(): false) }} Is Super User?
+        </label>
     </div>
 
     <div class="control-group">
@@ -55,6 +59,8 @@
             {{ Form::checkboxes('permissions', isset($user) ? array_keys($user->permissions) : array(), \Justinhilles\Admin\Models\Permission::all()->lists('name', 'slug')) }}
         </div>
     </div>
+
+
 
     {{ Form::buttons('admin.users.index')}}
 
