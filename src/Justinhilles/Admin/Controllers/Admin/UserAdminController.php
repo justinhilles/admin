@@ -14,6 +14,7 @@ class UserAdminController extends AdminController {
     {
         $this->links = self::getLinks();
         $this->user = new User;
+        $this->per_page = \Config::get('admin::config.per_page');
     }
 
     public static function getLinks()
@@ -23,7 +24,7 @@ class UserAdminController extends AdminController {
 
     public function index()
     {
-        $users = $this->user->paginate(\Config::get('admin::config.per_page'));
+        $users = $this->user->paginate($this->per_page);
 
         return \View::make($this->view('index'), array('users' => $users, 'links' => $this->links));        
     }
@@ -48,15 +49,13 @@ class UserAdminController extends AdminController {
     {
         try
         {
-            $input = \Input::only('email', 'first_name', 'last_name', 'password', 'password_confirmation', 'groups', 'permissions');
+            $input = \Input::only('email', 'first_name', 'last_name', 'password', 'password_confirmation');
 
             $validator = \Validator::make($input, User::$rules);
 
-            if($validator->passes())
-            {
-                $user = $this->user->create(array_except($input, 'password_confirmation'));
-
-                return \Redirect::route('admin.users.edit', array($user->id))->with( 'success' , 'User Created');
+            if($validator->passes()) {
+                $user = $this->user->create(array_except($validator->getData(), 'password_confirmation'));
+                return \Redirect::route($this->route('edit'), array($user->id))->with('success' , 'User Created');
             }
 
             throw new \Exception($validator->messages());
@@ -109,7 +108,7 @@ class UserAdminController extends AdminController {
     {
         try
         {
-            $user = $this->user->findOrFail($id);
+            $user = \Sentry::getUserProvider()->findById($id);
 
             $input = \Input::except('_token', 'groups','password', 'password_confirmation', 'superuser');
 
@@ -117,12 +116,9 @@ class UserAdminController extends AdminController {
 
             if($validator->passes())
             {
-                $user->removeAllGroups();
+                $user->groups()->detach();
 
-                if($groups = \Input::get('groups')) 
-                {
-                    $user->addGroups($groups);
-                }
+                $user->groups()->sync(\Input::get('groups', array()));
 
                 if($permissions = \Input::get('permissions')) {
                     $input['permissions'] = array_fill_keys(array_values($permissions), 1);
