@@ -1,10 +1,7 @@
 <?php
 
 return array(
-	'commands' => array(
-		'command.admin.install' => 'Justinhilles\Admin\Commands\AdminInstallCommand'
-	),
-	'aliases' => array(
+	'aliases' 		=> array(
 		'Basset'				=> 'Basset\Facade',
 		'User' 					=> 'Justinhilles\Admin\Models\User',
 		'Group' 				=> 'Justinhilles\Admin\Models\Group',
@@ -13,8 +10,15 @@ return array(
 		'AdminController' 		=> 'Justinhilles\Admin\Controllers\Admin\AdminController',
 		'AuthController' 		=> 'Justinhilles\Admin\Controllers\AuthController'
 	),
-	'providers' => array(
+	'providers' 	=> array(
 		'Cartalyst\Sentry\SentryServiceProvider',
 		'Basset\BassetServiceProvider'
+	),
+	'files'			=> array(
+		__DIR__.'/../routes/routes.php',
+		__DIR__.'/../filters.php'
+	),
+	'commands' 		=> array(
+		'command.admin.install' => 'Justinhilles\Admin\Commands\AdminInstallCommand'
 	),
 );

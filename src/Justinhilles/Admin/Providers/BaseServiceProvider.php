@@ -1,8 +1,26 @@
-<?php namespace Justinhilles\Admin\Providers;
+<?php 
 
-use Illuminate\Support\ServiceProvider;
+namespace Justinhilles\Admin\Providers;
 
-abstract class AbstractAdminServiceProvider extends ServiceProvider {
+trait BaseServiceProvider {
+
+	/**
+	 * Register the service provider.
+	 *
+	 * @return void
+	 */
+	public function registerFromConfig()
+	{
+		$this->registerProviders(\Config::get('admin::app.providers'));
+
+		$this->registerAliases(\Config::get('admin::app.aliases'));
+
+		$this->registerObservers(\Config::get('admin::app.observers'));
+
+		$this->registerCommands(\Config::get('admin::app.commands'));
+
+		$this->registerFiles(\Config::get('admin::app.files'));
+	}
 
 	public function registerObservers($observers = array())
 	{
@@ -40,6 +58,15 @@ abstract class AbstractAdminServiceProvider extends ServiceProvider {
 				});
 
 				$this->commands($alias);				
+			}
+		}
+	}
+
+	public function registerFiles($files = array())
+	{
+		if(!empty($files)) {
+			foreach($files as $path) {
+				include $path;
 			}
 		}
 	}
