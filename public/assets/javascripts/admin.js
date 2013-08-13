@@ -1,5 +1,9 @@
-  window.onload = function(){
-    var parts = (window.location.pathname.match(/\/admin\/([^\/]+)/));
-    $('#top a[href$="' + parts[1] + '"]').parent().addClass('active');
-    $('#nav li a[href$="' + parts[1] + '"]').parent().addClass('active');
-  }
+
+  jQuery(function(){
+
+	$('ul.nav li.dropdown').hover(function() {
+  $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500);
+}, function() {
+  $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500);
+});
+  });

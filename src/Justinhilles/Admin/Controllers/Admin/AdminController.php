@@ -14,10 +14,11 @@ class AdminController extends BaseController {
 
     public function __construct()
     {
-        $this->per_page = Config::get('cms::config.admin.per_page');
+        $this->per_page = Config::get('cms::config.admin.per_page', $this->per_page);
     }
 
-    public function handleUpload($name, $path = "uploads") {
+    public function handleUpload($name, $path = "uploads")
+    {
         if($file = \Input::file($name)) {
             $filename = $file->getClientOriginalName();
             if($file->move($path, $filename))
@@ -27,5 +28,4 @@ class AdminController extends BaseController {
         }
         return false;
     }
-
 }

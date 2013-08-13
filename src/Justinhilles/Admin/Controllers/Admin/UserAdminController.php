@@ -10,23 +10,16 @@ class UserAdminController extends AdminController {
 
     protected $routes = 'admin.users';
 
-    public function __construct()
+    public function __construct(User $user)
     {
-        $this->links = self::getLinks();
-        $this->user = new User;
-        $this->per_page = \Config::get('admin::config.per_page');
-    }
-
-    public static function getLinks()
-    {
-        return (array) array('Users' => \Config::get('admin::dashboard.fieldsets.Admin.Users')) + (array) \Config::get('admin::dashboard.fieldsets.Admin.Users.children');
+        $this->user = $user;
     }
 
     public function index()
     {
         $users = $this->user->paginate($this->per_page);
 
-        return \View::make($this->view('index'), array('users' => $users, 'links' => $this->links));        
+        return \View::make($this->view('index'), compact('users'));        
     }
 
     public function dashboard()
@@ -39,7 +32,7 @@ class UserAdminController extends AdminController {
      */
     public function create()
     {
-        return \View::make($this->view('create'), array('links' => $this->links));
+        return \View::make($this->view('create'));
     }
 
     /**
@@ -49,12 +42,14 @@ class UserAdminController extends AdminController {
     {
         try
         {
-            $input = \Input::only('email', 'first_name', 'last_name', 'password', 'password_confirmation');
+            $input = \Input::all();
 
             $validator = \Validator::make($input, User::$rules);
 
             if($validator->passes()) {
-                $user = $this->user->create(array_except($validator->getData(), 'password_confirmation'));
+
+                $user = $this->user->create($validator->getData());
+                
                 return \Redirect::route($this->route('edit'), array($user->id))->with('success' , 'User Created');
             }
 
@@ -108,7 +103,7 @@ class UserAdminController extends AdminController {
     {
         try
         {
-            $user = \Sentry::getUserProvider()->findById($id);
+            $user = $this->user->findById($id);
 
             $input = \Input::except('_token', 'groups','password', 'password_confirmation', 'superuser');
 

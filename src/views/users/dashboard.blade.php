@@ -4,9 +4,7 @@
 	<div class="row" id="dashboard">
 		<div class="span12">
 			<div class="row">
-				@foreach(Config::get('admin::dashboard.fieldsets') as $legend => $fieldset)
-					@include('admin::users._fieldset', compact('legend', 'fieldset'))
-				@endforeach
+				{{ Admin::dashboard() }}
 			</div>
 		</div>
 	</div>

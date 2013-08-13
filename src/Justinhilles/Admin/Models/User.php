@@ -26,6 +26,9 @@ class User extends \Cartalyst\Sentry\Users\Eloquent\User implements RemindableIn
 	 */
 	protected $hidden = array('password');
 
+
+	protected $fillable = array('first_name', 'last_name', 'email', 'password');
+
 	/**
 	 * Get the unique identifier for the user.
 	 *
@@ -54,25 +57,6 @@ class User extends \Cartalyst\Sentry\Users\Eloquent\User implements RemindableIn
 	public function getReminderEmail()
 	{
 		return $this->email;
-	}
-
-
-	public function removeAllGroups()
-	{
-		foreach($this->getGroups() as $group) 
-		{
-			$this->removeGroup($group);
-		}
-	}
-
-	public function addGroups($groups)
-	{
-		foreach($groups as $group_id)
-		{
-			$group = \Sentry::getGroupProvider()->findById($group_id);
-
-			$this->addGroup($group);                   
-		}
 	}
 
 	public static function hasPermissionToRoute($route) 

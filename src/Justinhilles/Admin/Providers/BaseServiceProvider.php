@@ -17,6 +17,8 @@ trait BaseServiceProvider {
 
 		$this->registerObservers(\Config::get('admin::app.observers'));
 
+		$this->registerComponents(\Config::get('admin::app.components'));
+
 		$this->registerCommands(\Config::get('admin::app.commands'));
 
 		$this->registerFiles(\Config::get('admin::app.files'));
@@ -67,6 +69,17 @@ trait BaseServiceProvider {
 		if(!empty($files)) {
 			foreach($files as $path) {
 				include $path;
+			}
+		}
+	}
+
+	public function registerComponents($components = array())
+	{
+		if(!empty($components)) {
+			foreach($components as $component => $class) {
+				$this->app->bind($component, function() use($class) {
+					return new $class;
+				});
 			}
 		}
 	}

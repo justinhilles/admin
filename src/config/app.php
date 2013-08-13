@@ -2,6 +2,7 @@
 
 return array(
 	'aliases' 		=> array(
+		'Admin'					=> 'Justinhilles\Admin\Facades\Admin',
 		'Basset'				=> 'Basset\Facade',
 		'User' 					=> 'Justinhilles\Admin\Models\User',
 		'Group' 				=> 'Justinhilles\Admin\Models\Group',
@@ -21,4 +22,10 @@ return array(
 	'commands' 		=> array(
 		'command.admin.install' => 'Justinhilles\Admin\Commands\AdminInstallCommand'
 	),
+	'observers' 	=> array(
+		'User' => 'Justinhilles\Admin\Observers\UserObserver'
+	),
+	'components' => array(
+		'admin' => 'Justinhilles\Admin\Admin'
+	)
 );

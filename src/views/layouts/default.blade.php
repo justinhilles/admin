@@ -10,7 +10,7 @@
   </div>
   <div id="main" class="container">
       @section('top')
-        @include('admin::global.tabs', compact('links'))
+        @include('admin::global.tabs')
       @show
       @include('admin::global.flash')
       @yield('main')

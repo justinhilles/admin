@@ -3,6 +3,7 @@
 namespace Justinhilles\Admin\Controllers;
 
 use Justinhilles\Admin\Controllers\BaseController;
+use Justinhilles\Admin\Models\User;
 
 class AuthController extends BaseController {
 
@@ -12,7 +13,7 @@ class AuthController extends BaseController {
 
     public function __construct()
     {
-    	$this->user = new \Justinhilles\Admin\Models\User;
+    	$this->user = new User;
     }
 
     /**
