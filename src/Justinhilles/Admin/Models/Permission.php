@@ -10,5 +10,13 @@ class Permission extends Model
 
  	protected $table = 'permissions';
 
- 	public static $rules = array();
+    public static $sluggable = array(
+        'build_from' => 'name',
+        'save_to'    => 'slug',
+        'unique' => true
+    );
+
+ 	public static $rules = array(
+ 		'name' => 'required'
+ 	);
 }

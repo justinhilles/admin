@@ -9,19 +9,24 @@ trait BaseServiceProvider {
 	 *
 	 * @return void
 	 */
-	public function registerFromConfig()
+	public function registerFromConfig($name = null)
 	{
-		$this->registerProviders(\Config::get('admin::app.providers'));
+		$this->registerProviders(\Config::get($name.'::app.providers'));
 
-		$this->registerAliases(\Config::get('admin::app.aliases'));
+		$this->registerConfig(\Config::get($name.'::app.config'));
 
-		$this->registerObservers(\Config::get('admin::app.observers'));
+		$this->registerAliases(\Config::get($name.'::app.aliases'));
 
-		$this->registerComponents(\Config::get('admin::app.components'));
+		$this->registerComponents(\Config::get($name.'::app.components'));
 
-		$this->registerCommands(\Config::get('admin::app.commands'));
+		$this->registerCommands(\Config::get($name.'::app.commands'));
+	}
 
-		$this->registerFiles(\Config::get('admin::app.files'));
+	public function bootFromConfig($name = null)
+	{
+		$this->registerObservers(\Config::get($name.'::app.observers'));
+
+		$this->registerFiles(\Config::get($name.'::app.files'));		
 	}
 
 	public function registerObservers($observers = array())
@@ -68,7 +73,9 @@ trait BaseServiceProvider {
 	{
 		if(!empty($files)) {
 			foreach($files as $path) {
-				include $path;
+				if(file_exists($path)) {
+					include $path;
+				}
 			}
 		}
 	}
@@ -80,6 +87,15 @@ trait BaseServiceProvider {
 				$this->app->bind($component, function() use($class) {
 					return new $class;
 				});
+			}
+		}
+	}
+
+	public function registerConfig($config = array())
+	{
+		if(!empty($config)) {
+			foreach($config as $key => $value) {
+				\Config::set($key, $value);
 			}
 		}
 	}

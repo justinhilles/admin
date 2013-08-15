@@ -19,13 +19,9 @@
             @foreach ($groups as $group)
                 <tr>
                     <td>{{{ $group->name }}}</td>
-					<td>{{ $group->permissions }}</td>
+					<td>{{{ $group->getDisplayPermissions() }}}</td>
                     <td>{{ link_to_route('admin.groups.edit', 'Edit', array($group->id), array('class' => 'btn btn-info')) }}</td>
-                    <td>
-                        {{ Form::open(array('method' => 'DELETE', 'route' => array('admin.groups.destroy', $group->id))) }}
-                            {{ Form::submit('Delete', array('class' => 'btn btn-danger')) }}
-                        {{ Form::close() }}
-                    </td>
+                    <td>{{ Form::delete(array('admin.groups.destroy', $group->id)) }}</td>
                 </tr>
             @endforeach
         </tbody>

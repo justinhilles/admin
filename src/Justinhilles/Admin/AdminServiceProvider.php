@@ -1,11 +1,10 @@
 <?php namespace Justinhilles\Admin;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Config;
 
 class AdminServiceProvider extends ServiceProvider {
 
-	use Providers\BaseServiceProvider;
+	use \Justinhilles\Admin\Providers\BaseServiceProvider;
 
 	/**
 	 * Indicates if loading of the provider is deferred.
@@ -23,9 +22,14 @@ class AdminServiceProvider extends ServiceProvider {
 	{
 		$this->package('justinhilles/admin');
 
-		$this->registerFromConfig();
-
+		$this->registerFromConfig('admin');
+		
 		$this->registerCollection();
+	}
+
+	public function boot()
+	{
+		$this->bootFromConfig('admin');
 	}
 
 	/**
@@ -35,15 +39,15 @@ class AdminServiceProvider extends ServiceProvider {
 	 */
 	public function registerCollection()
 	{
-		\Basset::collection(Config::get('admin::config.collection'), function($collection) {
+		\Basset::collection(\Config::get('admin::config.collection'), function($collection) {
 
-			if($stylesheets = Config::get('admin::config.stylesheets')) {
+			if($stylesheets = \Config::get('admin::config.stylesheets')) {
 				foreach($stylesheets as $stylesheet) {
 					$collection->stylesheet($stylesheet);
 				}
 			}
 
-			if($javascripts = Config::get('admin::config.javascripts')) {
+			if($javascripts = \Config::get('admin::config.javascripts')) {
 				foreach($javascripts as $javascript) {
 					$collection->javascript($javascript);
 				}

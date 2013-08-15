@@ -1,6 +1,6 @@
 <?php
 
-Route::group(array('prefix' => 'admin', 'before' => 'auth|permission'), function() {
+Route::group(array('prefix' => Config::get('admin::config.prefix', 'admin'), 'before' => 'auth|permission'), function() {
 
 	//User Management
 	Route::resource('users', 'Justinhilles\Admin\Controllers\Admin\UserAdminController');
@@ -11,7 +11,7 @@ Route::group(array('prefix' => 'admin', 'before' => 'auth|permission'), function
 	Route::get('/', array('as' => 'admin.dashboard' , 'uses' => 'Justinhilles\Admin\Controllers\Admin\UserAdminController@dashboard'));
 });
 
-Route::group(array('prefix' => 'admin'), function() {
+Route::group(array('prefix' => Config::get('admin::config.prefix', 'admin')), function() {
 	
 	//forgot
 	Route::get('forgot',  array('as' => 'admin.forgot', 'uses' => 'AuthController@forgot'));

@@ -13,19 +13,12 @@ class User extends \Cartalyst\Sentry\Users\Eloquent\User implements RemindableIn
 	 */
 	protected $table = 'users';
 
-
-	public static $rules = array(
-		'email' => 'required',
-		'password' => 'confirmed'
-	);
-
 	/**
 	 * The attributes excluded from the model's JSON form.
 	 *
 	 * @var array
 	 */
 	protected $hidden = array('password');
-
 
 	protected $fillable = array('first_name', 'last_name', 'email', 'password');
 
@@ -72,4 +65,35 @@ class User extends \Cartalyst\Sentry\Users\Eloquent\User implements RemindableIn
 		}
 		return true;
 	}
+
+    public function syncPermissions($values = array())
+    {
+    	$permissions = array();
+
+    	//Get Current Keys of Permissions
+    	$current = (array) array_keys($this->permissions);
+
+    	//Get Keys of New Permissions
+    	$new = (array) array_values((array) $values['permissions']);
+
+    	//Find which permissions will be added
+    	$add = (array) array_fill_keys(array_values((array) array_diff($new, $current)), 1);
+
+    	//Find which permissions will be deleted
+    	$delete = (array) array_fill_keys(array_values((array) array_diff($current, $new)), 0);
+    	
+    	//Merge All Permissions
+    	$permissions = (array) array_merge($this->permissions, $add, $delete);
+
+    	//Check if Superuser
+    	$permissions['superuser'] = (int) isset($values['superuser']) ? 1 : 0;
+
+    	//Set New Permissions
+     	$this->permissions = (array) $permissions;
+    }
+
+    public static function validator()
+    {
+    	return new \Justinhilles\Admin\Validators\UserValidator;
+    }
 }

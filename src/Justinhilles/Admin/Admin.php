@@ -8,11 +8,16 @@ class Admin {
 
 	public function dashboard()
 	{
-		return new DashboardRenderer((array) Config::get('admin::dashboard'));
+		return new DashboardRenderer($this->getDashboardConfig());
 	}
 
 	public function nav()
 	{
-		return NavRenderer::create(Config::get('admin::dashboard', array()));
+		return NavRenderer::create($this->getDashboardConfig());
+	}
+
+	public function getDashboardConfig()
+	{
+		return (array) Config::get('admin::dashboard', array());
 	}
 }

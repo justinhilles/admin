@@ -12,12 +12,12 @@ class UserAdminController extends AdminController {
 
     public function __construct(User $user)
     {
-        $this->user = $user;
+        $this->user = \Sentry::getUserProvider();
     }
 
     public function index()
     {
-        $users = $this->user->paginate($this->per_page);
+        $users = $this->user->createModel()->paginate($this->per_page);
 
         return \View::make($this->view('index'), compact('users'));        
     }
@@ -42,18 +42,16 @@ class UserAdminController extends AdminController {
     {
         try
         {
-            $input = \Input::all();
+            $v = User::validator();
 
-            $validator = \Validator::make($input, User::$rules);
+            if($v->passes()) {
 
-            if($validator->passes()) {
-
-                $user = $this->user->create($validator->getData());
+                $user = $this->user->create($v->data());
                 
                 return \Redirect::route($this->route('edit'), array($user->id))->with('success' , 'User Created');
             }
 
-            throw new \Exception($validator->messages());
+            throw new \Exception($v->messages());
         }
         catch (\Cartalyst\Sentry\Users\LoginRequiredException $e)
         {
@@ -83,14 +81,14 @@ class UserAdminController extends AdminController {
      */
     public function edit($id)
     {
-        $user = \Sentry::getUserProvider()->findById($id);
+        $user = $this->user->findById($id);
 
         if (is_null($user))
         {
             return \Redirect::route($this->route('index'));
         }
 
-        return \View::make($this->view('edit'), array('user' => $user, 'links' => $this->links));
+        return \View::make($this->view('edit'), compact('user'));
     }
 
     /**
@@ -109,38 +107,7 @@ class UserAdminController extends AdminController {
 
             $validator = \Validator::make($input, User::$rules);
 
-            if($validator->passes())
-            {
-                $user->groups()->detach();
-
-                $user->groups()->sync(\Input::get('groups', array()));
-
-                if($permissions = \Input::get('permissions')) {
-                    $input['permissions'] = array_fill_keys(array_values($permissions), 1);
-                }else{
-                    $input['permissions'] = array_fill_keys(array_keys($user->permissions), 0);
-                }
-
-                if($password = \Input::get('password'))
-                {
-                    $password_validator = \Validator::make(\Input::only('password', 'password_confirmation'), array('password' => 'required|confirmed'));
-
-                    if($password_validator->passes()) {
-                        $input = array_merge($input, \Input::only('password'));
-                    }else{
-                        throw new \Exception('Passwords do not match');
-                    }
-                }
-
-                if(!isset($input['activated'])) {
-                    $input['activated'] = 0;
-                }
-
-                if(!is_null(\Input::get('superuser'))){
-                    $input['permissions']['superuser'] = 1;
-                }else{
-                    $input['permissions']['superuser'] = 0;
-                }
+            if($validator->passes()) {
 
                 $user->update($input);
 
@@ -178,7 +145,7 @@ class UserAdminController extends AdminController {
         try
         {
             // Find the user using the user id
-            $user = \Sentry::getUserProvider()->findById($id);
+            $user = $this->user->findById($id);
 
             // Delete the user
             $user->delete();

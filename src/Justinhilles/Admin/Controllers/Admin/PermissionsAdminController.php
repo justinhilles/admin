@@ -20,8 +20,6 @@ class PermissionsAdminController extends AdminController {
     public function __construct(Permission $permission)
     {
         $this->permission = $permission;
-        
-        $this->links = \Justinhilles\Admin\Controllers\Admin\UserAdminController::getLinks();
     }
 
     /**
@@ -33,7 +31,7 @@ class PermissionsAdminController extends AdminController {
     {
         $permissions = $this->permission->all();
 
-        return \View::make($this->view('index'),  array('permissions' => $permissions, 'links' => $this->links));
+        return \View::make($this->view('index'),  compact('permissions'));
     }
 
     /**
@@ -43,7 +41,7 @@ class PermissionsAdminController extends AdminController {
      */
     public function create()
     {
-        return \View::make($this->view('create'), array('links' => $this->links));
+        return \View::make($this->view('create'));
     }
 
     /**
@@ -97,7 +95,7 @@ class PermissionsAdminController extends AdminController {
             return \Redirect::route($this->route('index'));
         }
 
-        return \View::make($this->view('edit'), array('permission' => $permission, 'links' => $this->links));
+        return \View::make($this->view('edit'), compact('permission'));
     }
 
     /**

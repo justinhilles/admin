@@ -19,9 +19,7 @@ class GroupsAdminController extends AdminController {
 
     public function __construct(Group $group)
     {
-        $this->group = $group;
-
-        $this->links = \Justinhilles\Admin\Controllers\Admin\UserAdminController::getLinks();
+        $this->group = \Sentry::getGroupProvider();
     }
 
     /**
@@ -31,9 +29,9 @@ class GroupsAdminController extends AdminController {
      */
     public function index()
     {
-        $groups = $this->group->all();
+        $groups = $this->group->createModel()->paginate($this->per_page);
 
-        return \View::make($this->view('index'), array('groups' => $groups, 'links' => $this->links));
+        return \View::make($this->view('index'), compact('groups'));
     }
 
     /**
@@ -43,7 +41,7 @@ class GroupsAdminController extends AdminController {
      */
     public function create()
     {
-        return \View::make($this->view('create'), array('links' => $this->links));
+        return \View::make($this->view('create'));
     }
 
     /**
@@ -66,7 +64,7 @@ class GroupsAdminController extends AdminController {
                 } else{
                     $input['permissions'] = array();
                 }
-                $group = \Sentry::getGroupProvider()->create($input);
+                $group = $this->group->create($input);
 
                 return \Redirect::route($this->route('edit'), array($group->id));
             }
@@ -97,9 +95,9 @@ class GroupsAdminController extends AdminController {
     {
         try
         {
-            $group = \Sentry::getGroupProvider()->findById($id);
+            $group = $this->group->findById($id);
 
-            return \View::make($this->view('edit'), array('group' => $group, 'links' => $this->links));            
+            return \View::make($this->view('edit'), compact('group'));            
         }
         catch (\Cartalyst\Sentry\Groups\GroupExistsException $e)
         {
@@ -128,9 +126,8 @@ class GroupsAdminController extends AdminController {
 
             $validation = \Validator::make($input, Group::$rules);
 
-            if ($validation->passes())
-            {
-                $group = \Sentry::getGroupProvider()->findById($id);
+            if ($validation->passes()) {
+                $group = $this->group->findById($id);
 
                 $add = array_fill_keys(array_values((array) $input['permissions']), 1);
                 $remove = array_fill_keys(array_keys(array_diff_key($group->permissions, $add)), 0);
@@ -170,7 +167,7 @@ class GroupsAdminController extends AdminController {
         try
         {
             // Find the group using the group id
-            $group = \Sentry::getGroupProvider()->findById($id);
+            $group = $this->group->findById($id);
 
             // Delete the group
             $group->delete();

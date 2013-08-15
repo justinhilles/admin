@@ -2,9 +2,9 @@
 
 namespace Justinhilles\Admin\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use \Cartalyst\Sentry\Groups\Eloquent\Group as BaseGroup;
 
-class Group extends Model
+class Group extends BaseGroup
 {
 	protected $table = 'groups';
 	
@@ -13,4 +13,9 @@ class Group extends Model
  	public static $rules = array(
  		'name' => 'required'
  	);
+
+ 	public function getDisplayPermissions()
+ 	{
+ 		return implode(", ", $this->permissions);
+ 	}
 }
