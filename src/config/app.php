@@ -21,10 +21,13 @@ return array(
 		'Basset\BassetServiceProvider'
 	),
 	'observers' 	=> array(
-		'\Justinhilles\Admin\Models\User' => '\Justinhilles\Admin\Observers\UserObserver'
+		'Justinhilles\Admin\Models\User' => '\Justinhilles\Admin\Observers\UserObserver'
 	),
 	'commands' 		=> array(
-		'command.admin.install' => 'Justinhilles\Admin\Commands\AdminInstallCommand'
+		'command.admin.install' => 'Justinhilles\Admin\Commands\AdminInstallCommand',
+		'command.admin.user.create' => 'Justinhilles\Admin\Commands\UserCreateCommand',
+		'command.admin.user.password' => 'Justinhilles\Admin\Commands\UserChangePasswordCommand',
+		'command.admin.user.activate' => 'Justinhilles\Admin\Commands\UserActivateCommand'
 	),
 	'files'			=> array(
 		__DIR__.'/../routes/routes.php',

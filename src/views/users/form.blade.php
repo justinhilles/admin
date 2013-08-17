@@ -42,25 +42,23 @@
     </div>
     <div class="control-group">
         <label class="checkbox">
-            {{ Form::checkbox('superuser', '',isset($user) ? $user->isSuperUser(): false) }} Is Super User?
+            {{ Form::checkbox('permissions[]', 'superuser', isset($user) ? $user->isSuperUser() : false ) }} Is Super User?
         </label>
     </div>
 
     <div class="control-group">
         {{ Form::label('groups', 'Groups:', array('class' => 'control-label')) }}
         <div class="controls">
-            {{ Form::checkboxes('groups', isset($user) ? $user->getGroups()->lists('id') : array(), \Justinhilles\Admin\Models\Group::all()->lists('name', 'id')) }}
+            {{ Form::checkboxes('groups', isset($user) ? $user->getGroups()->lists('id') : array(), Group::all()->lists('name', 'id')) }}
         </div>
     </div>
 
     <div class="control-group">
         {{ Form::label('permissions', 'Permissions:', array('class' => 'control-label')) }}
         <div class="controls">
-            {{ Form::checkboxes('permissions', isset($user) ? array_keys($user->permissions) : array(), \Justinhilles\Admin\Models\Permission::all()->lists('name', 'slug')) }}
+            {{ Form::checkboxes('permissions', isset($user) ? array_keys($user->permissions) : array(), Permission::all()->lists('name', 'slug')) }}
         </div>
     </div>
-
-
 
     {{ Form::buttons('admin.users.index')}}
 

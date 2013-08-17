@@ -1,8 +1,8 @@
-<?php 
-
-namespace Justinhilles\Admin\Controllers\Admin;
+<?php namespace Justinhilles\Admin\Controllers\Admin;
 
 use Justinhilles\Admin\Models\User;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Redirect;
 
 class UserAdminController extends AdminController {
 
@@ -12,65 +12,43 @@ class UserAdminController extends AdminController {
 
     public function __construct(User $user)
     {
-        $this->user = \Sentry::getUserProvider();
+        $this->provider = \Sentry::getUserProvider();
     }
 
+    /**
+     * Display Index Page
+     * 
+     *  @return Response
+     */
     public function index()
     {
-        $users = $this->user->createModel()->paginate($this->per_page);
+        //Get all Users and Paginate
+        $users = $this->provider->createModel()->paginate($this->per_page);
 
-        return \View::make($this->view('index'), compact('users'));        
+        //Create View for Index
+        return View::make($this->view('index'), compact('users'));        
     }
 
+    /**
+     *  Display Dashboard Page
+     * 
+     *  @return Response
+     */
     public function dashboard()
     {
-        return \View::make($this->view('dashboard'));
+        //Create View for Dashboard
+        return View::make($this->view('dashboard'));
     }
 
     /**
      * Displays the form for account creation
+     * 
+     *  @return Reponse
      */
     public function create()
     {
-        return \View::make($this->view('create'));
-    }
-
-    /**
-     * Stores new account
-     */
-    public function store()
-    {
-        try
-        {
-            $v = User::validator();
-
-            if($v->passes()) {
-
-                $user = $this->user->create($v->data());
-                
-                return \Redirect::route($this->route('edit'), array($user->id))->with('success' , 'User Created');
-            }
-
-            throw new \Exception($v->messages());
-        }
-        catch (\Cartalyst\Sentry\Users\LoginRequiredException $e)
-        {
-            $error = 'Login field is required.';
-        }
-        catch (\Cartalyst\Sentry\Users\PasswordRequiredException $e)
-        {
-            $error =  'Password field is required.';
-        }
-        catch (\Cartalyst\Sentry\Users\UserExistsException $e)
-        {
-            $error =  'User with this login already exists.';
-        }
-        catch(\Exception $e)
-        {
-            $error = $e->getMessage();
-        }
-
-        return \Redirect::route($this->route('create'))->withInput()->with( 'error', $error );
+        //Create View for Create Form
+        return View::make($this->view('create'));
     }
 
     /**
@@ -81,14 +59,94 @@ class UserAdminController extends AdminController {
      */
     public function edit($id)
     {
-        $user = $this->user->findById($id);
+        try {
+            //Find user
+            $user = $this->provider->findById($id);
 
-        if (is_null($user))
-        {
-            return \Redirect::route($this->route('index'));
+            //Check if Users exist
+            if (is_null($user)) {
+
+                //Retyrn user to Index
+                return Redirect::route($this->route('index'));
+            }
+
+            //Show Edit View
+            return View::make($this->view('edit'), compact('user'));
+        }
+        catch(\Exception $e) {
+            //Return to Index
+            return Redirect::route($this->route('index'));            
+        }
+    }
+
+    /**
+     * Show Edit Screen for Current User
+     * 
+     *  @return Response
+     */
+    public function profile()
+    {
+        try {
+            //Get Current User
+            $user = \Sentry::getUser();
+
+            // Check if Users exist
+            if (is_null($user)) {
+
+                //Return user to Index
+                throw new \Exception('User Not Found');
+            }
+
+            //Show Edit View
+            return View::make($this->view('edit'), compact('user'));
+        } 
+        catch(\Exception $e) {
+            //Return to Index
+            return Redirect::route($this->route('index'));
+        }
+    }
+
+    /**
+     * Stores new account
+     * 
+     * @return Response
+     */
+    public function store()
+    {
+        try {
+
+            //Get User Validator
+            $v = User::validator();
+
+            //Check if Validation Passes
+            if($v->passes()) {
+
+                //Create User
+                $user = $this->provider->createModel();
+
+                //Handle Request
+                $v->handle($user);
+                
+                //Return to Edit View
+                return Redirect::route($this->route('edit'), array($user->id))->with('success' , 'User Created');
+            }
+
+            throw new \Exception($v->messages());
+        }
+        catch (\Cartalyst\Sentry\Users\LoginRequiredException $e) {
+            $error = 'Login field is required.';
+        }
+        catch (\Cartalyst\Sentry\Users\PasswordRequiredException $e) {
+            $error =  'Password field is required.';
+        }
+        catch (\Cartalyst\Sentry\Users\UserExistsException $e) {
+            $error =  'User with this login already exists.';
+        }
+        catch(\Exception $e) {
+            $error = $e->getMessage();
         }
 
-        return \View::make($this->view('edit'), compact('user'));
+        return Redirect::route($this->route('create'))->withInput()->with( 'error', $error );
     }
 
     /**
@@ -99,39 +157,39 @@ class UserAdminController extends AdminController {
      */
     public function update($id)
     {
-        try
-        {
-            $user = $this->user->findById($id);
+        try {
+            //Find the user using the user id
+            $user = $this->provider->findById($id);
 
-            $input = \Input::except('_token', 'groups','password', 'password_confirmation', 'superuser');
+            //Get Validator
+            $v = User::validator();
 
-            $validator = \Validator::make($input, User::$rules);
+            //Check if Form Passes
+            if($v->passes()) {
 
-            if($validator->passes()) {
+                //Handle Request
+                $v->handle($user);
 
-                $user->update($input);
-
-                return \Redirect::route($this->route('edit'), $id)->with('success', 'User Updated');
+                //Return to Edit Page
+                return Redirect::route($this->route('edit'), $id)->with('success', 'User Updated');
             }
 
-            return \Redirect::route($this->route('edit'), $id)->with('error', $validator->messages());
-        }
-        catch (\Cartalyst\Sentry\Users\UserExistsException $e)
-        {
+            //Throw Form Errors
+            throw new \Exception($v->messages());
+
+        } catch (\Cartalyst\Sentry\Users\UserExistsException $e) {
             $error = 'User with this login already exists.';
-        }
-        catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
-        {
+
+        } catch (\Cartalyst\Sentry\Users\UserNotFoundException $e) {
             $error = 'User was not found.';
-        }
-        catch(\Exception $e)
-        {
+
+        } catch(\Exception $e) {
             $error = $e->getMessage();
+
         }
 
-        return \Redirect::route($this->route('edit'), $id)
-            ->withInput()
-            ->with('error', $error);
+        //Return User to Edit Page
+        return Redirect::route($this->route('edit'), $id)->withInput()->with('error', $error);
     }
 
     /**
@@ -142,20 +200,20 @@ class UserAdminController extends AdminController {
      */
     public function destroy($id)
     {
-        try
-        {
+        try {
             // Find the user using the user id
-            $user = $this->user->findById($id);
+            $user = $this->provider->findById($id);
 
             // Delete the user
             $user->delete();
 
             //Return to user home
-            return \Redirect::route($this->route('index'))->with('success', 'User deleted');
-        }
-        catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
-        {
-            return \Redirect::route($this->route('index'))->with('error', 'User not found');
+            return Redirect::route($this->route('index'))->with('success', 'User deleted');
+
+        } 
+        catch (\Cartalyst\Sentry\Users\UserNotFoundException $e) {
+
+            return Redirect::route($this->route('index'))->with('error', 'User not found');
         }
     }
 }

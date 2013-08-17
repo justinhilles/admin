@@ -1,0 +1,1 @@
+{{ link_to_route('admin.reset', 'Reset Your Password', array($user->getResetPasswordCode())) }}

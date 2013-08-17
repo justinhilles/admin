@@ -8,7 +8,7 @@
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome, {{ Sentry::getUser()->first_name }} <b class="caret"></b></a>
 				<ul class="dropdown-menu">
-					<li><a href="/user/preferences"><i class="icon-cog"></i> Edit Profile</a></li>
+					<li><a href="{{ URL::route('admin.profile') }}"><i class="icon-cog"></i> Edit Profile</a></li>
 					<li class="divider"></li>
 					<li><a href="{{ URL::route('admin.logout') }}"><i class="icon-off"></i> Logout</a></li>
 				</ul>

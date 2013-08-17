@@ -66,6 +66,11 @@ class User extends \Cartalyst\Sentry\Users\Eloquent\User implements RemindableIn
 		return true;
 	}
 
+	public function fullname()
+	{
+		return implode(' ', array($this->first_name, $this->last_name));
+	}
+
     public function syncPermissions($values = array())
     {
     	$permissions = array();
@@ -74,7 +79,7 @@ class User extends \Cartalyst\Sentry\Users\Eloquent\User implements RemindableIn
     	$current = (array) array_keys($this->permissions);
 
     	//Get Keys of New Permissions
-    	$new = (array) array_values((array) $values['permissions']);
+    	$new = (array) array_values((array) $values);
 
     	//Find which permissions will be added
     	$add = (array) array_fill_keys(array_values((array) array_diff($new, $current)), 1);
@@ -85,12 +90,37 @@ class User extends \Cartalyst\Sentry\Users\Eloquent\User implements RemindableIn
     	//Merge All Permissions
     	$permissions = (array) array_merge($this->permissions, $add, $delete);
 
-    	//Check if Superuser
-    	$permissions['superuser'] = (int) isset($values['superuser']) ? 1 : 0;
-
     	//Set New Permissions
-     	$this->permissions = (array) $permissions;
+     	$this->setPermissionsAttribute((array) $permissions);
     }
+
+    public function syncGroups($values = array())
+    {
+    	//Detach All Groups
+        $this->groups()->detach();
+
+        //Reload from passed Values
+        $this->groups()->sync((array) $values);
+    }
+
+	public function validate()
+	{
+		if ( ! $login = $this->{static::$loginAttribute})
+		{
+			throw new LoginRequiredException("A login is required for a user, none given.");
+		}
+
+		// Check if the user already exists
+		$query = $this->newQuery();
+		$persistedUser = $query->where($this->getLoginName(), '=', $login)->first();
+
+		if ($persistedUser and $persistedUser->getId() != $this->getId())
+		{
+			throw new UserExistsException("A user already exists with login [$login], logins must be unique for users.");
+		}
+
+		return true;
+	}
 
     public static function validator()
     {

@@ -10,7 +10,7 @@ abstract class Validator {
  
   public function __construct($input = NULL)
   {
-    $this->input = $input ? : \Input::all();
+    $this->input = $input ? : \Input::except('_method', '_token');
   }
  
   public function passes()
