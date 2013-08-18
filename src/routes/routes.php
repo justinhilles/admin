@@ -1,6 +1,6 @@
 <?php
 
-Route::group(array('prefix' => Config::get('admin::config.prefix', 'admin'), 'before' => 'auth|permission'), function() {
+Route::group(array('prefix' => Config::get('admin::config.prefix', 'admin'), 'before' => 'auth|route_permission'), function() {
 
 	//User Management
 	Route::resource('users', 'Justinhilles\Admin\Controllers\Admin\UserAdminController');

@@ -7,7 +7,7 @@
 	}
 });
 
-\Route::filter('permission', function($route, $request) {
+\Route::filter('route_permission', function($route, $request) {
 	if(!\User::hasPermissionToRoute(Route::currentRouteName())) {
 		return Redirect::route('admin.dashboard')->with('error', 'You are not authorized');
 	}

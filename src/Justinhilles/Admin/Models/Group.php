@@ -16,6 +16,6 @@ class Group extends BaseGroup
 
  	public function getDisplayPermissions()
  	{
- 		return implode(", ", $this->permissions);
+ 		return implode(", ", array_keys($this->getPermissions()));
  	}
 }

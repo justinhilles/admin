@@ -26,7 +26,7 @@ class UserAdminController extends AdminController {
         $users = $this->provider->createModel()->paginate($this->per_page);
 
         //Create View for Index
-        return View::make($this->view('index'), compact('users'));        
+        return View::make('admin::users.index', compact('users'));        
     }
 
     /**
@@ -37,7 +37,7 @@ class UserAdminController extends AdminController {
     public function dashboard()
     {
         //Create View for Dashboard
-        return View::make($this->view('dashboard'));
+        return View::make('admin::users.dashboard');
     }
 
     /**
@@ -48,7 +48,7 @@ class UserAdminController extends AdminController {
     public function create()
     {
         //Create View for Create Form
-        return View::make($this->view('create'));
+        return View::make('admin::users.create');
     }
 
     /**
@@ -71,7 +71,7 @@ class UserAdminController extends AdminController {
             }
 
             //Show Edit View
-            return View::make($this->view('edit'), compact('user'));
+            return View::make('admin::users.edit', compact('user'));
         }
         catch(\Exception $e) {
             //Return to Index
@@ -98,7 +98,7 @@ class UserAdminController extends AdminController {
             }
 
             //Show Edit View
-            return View::make($this->view('edit'), compact('user'));
+            return View::make('admin::users.edit', compact('user'));
         } 
         catch(\Exception $e) {
             //Return to Index

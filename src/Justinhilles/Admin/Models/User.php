@@ -54,7 +54,7 @@ class User extends \Cartalyst\Sentry\Users\Eloquent\User implements RemindableIn
 
 	public static function hasPermissionToRoute($route) 
 	{
-		if($permission = \Config::get('admin::permissions.'.$route)) {
+		if(is_string($route) AND $permission = \Config::get('admin::permissions.'.$route)) {
 			$permission = explode(',', $permission);
 
 			if(!is_array($permission)) {

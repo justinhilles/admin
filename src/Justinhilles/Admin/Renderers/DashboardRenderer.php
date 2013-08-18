@@ -15,16 +15,18 @@ class DashboardRenderer {
 
     public function renderLink($link, $content)
     {
-    	return sprintf('<div class="span3 icon" align="center">
-                            <a href="%s">
-                                <i class="%s icon-8x icon-border"></i>
-                                <br /><br /><br />
-                                <span class="title">%s</span>
-                            </a>
-                        </div>', 
-                        \URL::route($link['route']), 
-                        $link['icon'], 
-                        $content );
+        if(\User::hasPermissionToRoute($link['route'])) {
+        	return sprintf('<div class="span3 icon" align="center">
+                                <a href="%s">
+                                    <i class="%s icon-8x icon-border"></i>
+                                    <br /><br /><br />
+                                    <span class="title">%s</span>
+                                </a>
+                            </div>', 
+                            \URL::route($link['route']), 
+                            $link['icon'], 
+                            $content );
+        }
     }
 
     public function renderLinks($links)
@@ -32,6 +34,7 @@ class DashboardRenderer {
         $content = null;
         
         foreach($links as $title => $link) {
+
     		$content .= $this->renderLink($link, $title);
     	}
 
@@ -49,7 +52,9 @@ class DashboardRenderer {
         
         foreach($this->getFieldsets() as $fieldset) {
             if($links = $this->getLinksForFieldset($fieldset)) {
-                $fieldsets .= sprintf("<fieldset><legend>%s</legend>%s</fieldset>", $fieldset, $this->renderLinks($links));
+                if($html = $this->renderLinks($links)) {
+                    $fieldsets .= sprintf("<fieldset><legend>%s</legend>%s</fieldset>", $fieldset, $this->renderLinks($links));
+                }
             }
         }
 

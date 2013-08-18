@@ -4,8 +4,12 @@ class NavRenderer extends \RecursiveIteratorIterator {
 
     protected $buffer = null;
 
-    public static function create(array $data)
+    public static function create(array $data, $user = null)
     {
+        if(!is_null($user)) {
+            $this->user = $user;
+        }
+
         $renderer = new self(new \RecursiveArrayIterator($data),  \RecursiveIteratorIterator::SELF_FIRST);
         $renderer->render();
         return (string) $renderer;
@@ -15,7 +19,16 @@ class NavRenderer extends \RecursiveIteratorIterator {
     {
         $current = $this->getInnerIterator()->current();
 
-        return (isset($current['children']));
+        $links = array();
+        if(isset($current['children'])) {
+            foreach($current['children'] as $link) {
+                if(\User::hasPermissionToRoute($link['route'])){
+                    $links[] = $link;
+                }
+            }
+        }
+
+        return count($links) > 0;
     }
 
     public function callGetChildren()
@@ -41,32 +54,45 @@ class NavRenderer extends \RecursiveIteratorIterator {
         if(isset(parent::current()['route'])) {
             return $this->wrap($this->key(), 'a', array(
                 'href' => \URL::route(parent::current()['route']),
-                'class' => ($this->callHasChildren() ? "dropdown-toggle" : null)
+                'class' => ($this->callHasChildren() ? 'dropdown-toggle' : null)
             ));
         }
         return false;
     }
 
+    public function valid()
+    {
+        $link = parent::current();
+
+        if(isset($link['route'])) {
+            return \User::hasPermissionToRoute($link['route']);
+        }
+
+        return parent::valid();
+    }
+
     public function beforeCurrent()
     {
         $attributes = array();
-        if($this->callHasChildren())
-        {
+        
+        if($this->callHasChildren()) {
             $attributes['class'] = 'dropdown';
         }
-       $this->buffer .= $this->openTag("li", $attributes); 
+
+        $this->buffer .= $this->openTag('li', $attributes); 
     }
 
     public function afterCurrent()
     {
-        $this->buffer .= (!$this->callHasChildren() ? "</li>": null);
+        $this->buffer .= (string) (!$this->callHasChildren() ? '</li>': null);
     }
 
     public function beginChildren()
     {
         $attributes = array(
-            'class' => "dropdown-menu"
+            'class' => 'dropdown-menu'
         );
+
         $this->buffer .= $this->openTag('ul', $attributes);
     }
 
@@ -87,7 +113,7 @@ class NavRenderer extends \RecursiveIteratorIterator {
 
     public function openTag($tag, $attributes = array())
     {
-        return sprintf("<%s %s>", $tag, $this->attributes($attributes));
+        return sprintf("<%s%s>", $tag, $this->attributes($attributes));
     }
 
     public function attributes($attributes = array())
@@ -97,6 +123,6 @@ class NavRenderer extends \RecursiveIteratorIterator {
         {
             $html[] = implode("=", array($key, $value));
         }
-        return implode(" ", $html);
+        return " ".implode(" ", $html);
     }
 }
