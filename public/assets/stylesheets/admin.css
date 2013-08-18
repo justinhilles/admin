@@ -9,19 +9,14 @@
 #tree .nav{padding-right: 0px;}
 
 .icon{margin-bottom: 40px;}
-
 .icon a{position:relative;}
-
-.icon-8x {
-    font-size: 8em;
-}
+.icon-8x {font-size: 8em;}
 
 .left{float:left;}
 
-.icon-8x.icon-border {
-    border-radius: 15px;
-    border-width: 8px;
-}
+.icon-8x.icon-border {border-radius: 15px;border-width: 8px;}
+
+.table tr td form{margin: 0px;}
 
 #login{
 	margin: 100px auto;

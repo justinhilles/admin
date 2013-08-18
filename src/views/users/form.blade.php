@@ -1,4 +1,4 @@
-{{ Form::tag('admin.users', (isset($user) ? $user : null)) }}
+{{ Form::tag('admin.users', (isset($user) ? $user : null), false, array('class' => 'form-horizontal')) }}
 
     <div class="control-group">
         {{ Form::label('first_name', 'First Name:', array('class' => 'control-label')) }}
@@ -36,29 +36,33 @@
     </div>
 
     <div class="control-group">
-        <label class="checkbox">
-            {{ Form::checkbox('activated') }} Active?
-        </label>
+        {{ Form::label('activated', 'Activated?:', array('class' => 'control-label')) }}
+         <div class="controls">
+            {{ Form::checkbox('activated') }}
+        </div>
     </div>
     <div class="control-group">
-        <label class="checkbox">
-            {{ Form::checkbox('permissions[]', 'superuser', isset($user) ? $user->isSuperUser() : false ) }} Is Super User?
-        </label>
-    </div>
-
-    <div class="control-group">
-        {{ Form::label('groups', 'Groups:', array('class' => 'control-label')) }}
+        {{ Form::label('permissions[]', 'Super User?:', array('class' => 'control-label')) }}
         <div class="controls">
-            {{ Form::checkboxes('groups', isset($user) ? $user->getGroups()->lists('id') : array(), Group::all()->lists('name', 'id')) }}
+            {{ Form::checkbox('permissions[]', 'superuser', isset($user) ? $user->isSuperUser() : false ) }}
         </div>
     </div>
 
-    <div class="control-group">
-        {{ Form::label('permissions', 'Permissions:', array('class' => 'control-label')) }}
-        <div class="controls">
-            {{ Form::checkboxes('permissions', isset($user) ? array_keys($user->permissions) : array(), Permission::all()->lists('name', 'slug')) }}
+    @if(isset($user))
+        <div class="control-group">
+            {{ Form::label('groups', 'Groups:', array('class' => 'control-label')) }}
+            <div class="controls">
+                {{ Form::checkboxes('groups', isset($user) ? $user->getGroups()->lists('id') : array(), Group::all()->lists('name', 'id')) }}
+            </div>
         </div>
-    </div>
+
+        <div class="control-group">
+            {{ Form::label('permissions', 'Permissions:', array('class' => 'control-label')) }}
+            <div class="controls">
+                {{ Form::checkboxes('permissions', isset($user) ? array_keys($user->permissions) : array(), Permission::all()->lists('name', 'slug')) }}
+            </div>
+        </div>
+    @endif
 
     {{ Form::buttons('admin.users.index')}}
 

@@ -126,4 +126,14 @@ class User extends \Cartalyst\Sentry\Users\Eloquent\User implements RemindableIn
     {
     	return new \Justinhilles\Admin\Validators\UserValidator;
     }
+
+    public function getDisplayPermissions()
+    {
+    	return implode(', ', array_keys($this->getMergedPermissions()));
+    }
+
+    public function getDisplayGroups()
+    {
+    	return implode(", ", $this->getGroups()->lists('name'));
+    }
 }

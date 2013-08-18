@@ -3,7 +3,7 @@
 @section('main')
     <h1>All Users</h1>
     @if ($users->count())
-        <table class="table table-striped">
+        <table class="table table-hover">
             <thead>
                 <tr>
                     <th>Active</th>
@@ -24,14 +24,10 @@
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->first_name }}</td>
                         <td>{{ $user->last_name }}</td>
-                        <td>{{ implode(", ", $user->getGroups()->lists('name')) }}</td>
-                        <td>{{ implode(', ', array_keys($user->getMergedPermissions())); }}</td>
+                        <td>{{ $user->getDisplayGroups() }}</td>
+                        <td>{{ $user->getDisplayPermissions(); }}</td>
                         <td>{{ link_to_route('admin.users.edit', 'Edit', array($user->id), array('class' => 'btn btn-info')) }}</td>
-                        <td>
-                            {{ Form::open(array('method' => 'DELETE', 'route' => array('admin.users.destroy', $user->id))) }}
-                                {{ Form::submit('Delete', array('class' => 'btn btn-danger')) }}
-                            {{ Form::close() }}
-                        </td>
+                        <td>{{ Form::delete(array('admin.users.destroy', $user->id)) }}</td>
                     </tr>
                 @endforeach
             </tbody>
