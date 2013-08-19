@@ -3,10 +3,9 @@
 use Justinhilles\Admin\Models\User;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Redirect;
+use Config;
 
 class UserAdminController extends AdminController {
-
-    protected $views = 'admin::users';
 
     protected $routes = 'admin.users';
 
@@ -26,7 +25,7 @@ class UserAdminController extends AdminController {
         $users = $this->provider->createModel()->paginate($this->per_page);
 
         //Create View for Index
-        return View::make('admin::users.index', compact('users'));        
+        return View::make(Config::get('admin::views.admin.users.index', 'admin::users.index'), compact('users'));        
     }
 
     /**
@@ -37,7 +36,7 @@ class UserAdminController extends AdminController {
     public function dashboard()
     {
         //Create View for Dashboard
-        return View::make('admin::users.dashboard');
+        return View::make(Config::get('admin::views.admin.users.dashboard', 'admin::users.dashboard'));
     }
 
     /**
@@ -48,7 +47,7 @@ class UserAdminController extends AdminController {
     public function create()
     {
         //Create View for Create Form
-        return View::make('admin::users.create');
+        return View::make(Config::get('admin::views.admin.users.create', 'admin::users.create'));
     }
 
     /**
@@ -71,7 +70,7 @@ class UserAdminController extends AdminController {
             }
 
             //Show Edit View
-            return View::make('admin::users.edit', compact('user'));
+            return View::make(Config::get('admin::views.admin.users.edit', 'admin::users.edit'), compact('user'));
         }
         catch(\Exception $e) {
             //Return to Index
@@ -98,7 +97,7 @@ class UserAdminController extends AdminController {
             }
 
             //Show Edit View
-            return View::make('admin::users.edit', compact('user'));
+            return View::make(Config::get('admin::views.admin.users.edit', 'admin::users.edit'), compact('user'));
         } 
         catch(\Exception $e) {
             //Return to Index

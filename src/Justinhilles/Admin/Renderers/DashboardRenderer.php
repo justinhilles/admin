@@ -49,6 +49,7 @@ class DashboardRenderer {
     public function renderFieldsets()
     {
         $fieldsets = null;
+
         
         foreach($this->getFieldsets() as $fieldset) {
             if($links = $this->getLinksForFieldset($fieldset)) {
@@ -57,7 +58,6 @@ class DashboardRenderer {
                 }
             }
         }
-
         return $fieldsets;
     }
 
@@ -84,6 +84,6 @@ class DashboardRenderer {
             }
         }
 
-        return $fieldsets;
+        return array_keys(array_flip($fieldsets));
     }
 }

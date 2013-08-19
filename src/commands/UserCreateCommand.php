@@ -6,7 +6,6 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Filesystem\Filesystem;
-use Config;
 
 class UserCreateCommand extends Command {
 
@@ -24,7 +23,9 @@ class UserCreateCommand extends Command {
     public function fire()
     {
         $user['email'] = $this->argument('email');
+
         $user['password'] = $this->argument('password');
+        
         if($first_name = $this->option('first_name')) {
             $user['first_name'] = $first_name;
         }
