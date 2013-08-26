@@ -4,6 +4,7 @@ return array(
 	'prefix' 			=> 'admin',
 	'title' 			=> 'Admin',
 	'per_page' 			=> 10,
+	'collections'		=> array('admin', 'cms'),
 	'collection' 		=> 'admin',
 	'stylesheets' 		=> array(
 		'//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css',

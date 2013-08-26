@@ -24,11 +24,13 @@ class AdminServiceProvider extends ServiceProvider {
 
 		$this->registerFromConfig('admin');
 		
-		$this->registerCollection();
+		
 	}
 
 	public function boot()
 	{
+		$this->registerCollection();
+		
 		$this->bootFromConfig('admin');
 	}
 
@@ -39,7 +41,9 @@ class AdminServiceProvider extends ServiceProvider {
 	 */
 	public function registerCollection()
 	{
-		\Basset::collection(\Config::get('admin::config.collection'), function($collection) {
+		$this->app['basset']->package('justinhilles/admin');
+
+		$this->app['basset']->collection(\Config::get('admin::config.collection', 'admin'), function($collection) {
 
 			if($stylesheets = \Config::get('admin::config.stylesheets')) {
 				foreach($stylesheets as $stylesheet) {
