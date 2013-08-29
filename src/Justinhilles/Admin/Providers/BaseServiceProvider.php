@@ -42,7 +42,7 @@ trait BaseServiceProvider {
 	{
 		if(!empty($aliases)) {
 			foreach($aliases as $alias => $original) {
-				if(!class_exists($alias)) {
+				if(!class_exists($alias) AND class_exists($original)) {
 					class_alias($original, $alias);
 				}
 			}
