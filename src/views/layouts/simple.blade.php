@@ -5,6 +5,8 @@
         @stylesheets(Config::get('admin::config.collections'))
         @section('stylesheets')
         @show
+        <!-- Queue $ calls till jQuery loaded at bottom -->
+        <script type='text/javascript'>window.q=[];window.$=function(f){q.push(f)}</script>
     </head>
     <body>
     	@yield('default')
