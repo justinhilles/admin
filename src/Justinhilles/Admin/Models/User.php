@@ -54,14 +54,16 @@ class User extends \Cartalyst\Sentry\Users\Eloquent\User implements RemindableIn
 
 	public static function hasPermissionToRoute($route) 
 	{
-		if(is_string($route) AND $permission = \Config::get('admin::permissions.'.$route)) {
+		$user = \Sentry::getUser();
+
+		if(is_object($user) AND is_string($route) AND $permission = \Config::get('admin::permissions.'.$route)) {
 			$permission = explode(',', $permission);
 
 			if(!is_array($permission)) {
 				$permission = array($permission);
 			}
 			
-			return \Sentry::getUser()->hasAnyAccess($permission);
+			return $user->hasAnyAccess($permission);
 		}
 		return true;
 	}
@@ -105,8 +107,7 @@ class User extends \Cartalyst\Sentry\Users\Eloquent\User implements RemindableIn
 
 	public function validate()
 	{
-		if ( ! $login = $this->{static::$loginAttribute})
-		{
+		if ( ! $login = $this->{static::$loginAttribute}) {
 			throw new LoginRequiredException("A login is required for a user, none given.");
 		}
 

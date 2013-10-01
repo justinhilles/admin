@@ -23,8 +23,6 @@ class AdminServiceProvider extends ServiceProvider {
 		$this->package('justinhilles/admin');
 
 		$this->registerFromConfig('admin');
-		
-		
 	}
 
 	public function boot()
