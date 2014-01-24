@@ -12,7 +12,7 @@
         "illuminate/support": "4.0.x",
         "jasonlewis/basset": "dev-master",
         "twitter/bootstrap": "v2.3.2",
-        "leafo/lessphp": "v0.3.9",
+        "leafo/lessphp": "v0.4.0",
         "cartalyst/sentry": "2.0.*",
         "cviebrock/eloquent-sluggable": "1.0.*"
     },
