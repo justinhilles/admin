@@ -1,69 +1,51 @@
 <?php namespace Justinhilles\Admin;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Event;
 
 class AdminServiceProvider extends ServiceProvider {
 
-	use \Justinhilles\Admin\Providers\BaseServiceProvider;
+    use \Justinhilles\Admin\Providers\BaseServiceProvider;
 
-	/**
-	 * Indicates if loading of the provider is deferred.
-	 *
-	 * @var bool
-	 */
-	protected $defer = false;
+    const PACKAGE_NAME = 'admin';
 
-	/**
-	 * Register the service provider.
-	 *
-	 * @return void
-	 */
-	public function register()
-	{
-		$this->package('justinhilles/admin');
+    /**
+     * Indicates if loading of the provider is deferred.
+     *
+     * @var bool
+     */
+    protected $defer = false;
 
-		$this->registerFromConfig('admin');
-	}
+    /**
+     * Register the service provider.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->package('justinhilles/admin');
 
-	public function boot()
-	{
-		$this->registerCollection();
-		
-		$this->bootFromConfig('admin');
-	}
+        $this->registerFromConfig(self::PACKAGE_NAME);
+    }
 
-	/**
-	 * Register Basset Collection
-	 *
-	 * @return void
-	 */
-	public function registerCollection()
-	{
-		$this->app['basset']->package('justinhilles/admin');
+    public function boot()
+    {       
+        $this->bootFromConfig(self::PACKAGE_NAME);
+        
+        Event::listen('asset.pipeline.boot', function($pipeline) {
+            $config = $pipeline->getConfig();
+            $config['paths'][] = 'vendor/justinhilles/admin';
+            $pipeline->setConfig($config);
+        });
+    }
 
-		$this->app['basset']->collection(\Config::get('admin::config.collection', 'admin'), function($collection) {
-
-			if($stylesheets = \Config::get('admin::config.stylesheets')) {
-				foreach($stylesheets as $stylesheet) {
-					$collection->stylesheet($stylesheet);
-				}
-			}
-
-			if($javascripts = \Config::get('admin::config.javascripts')) {
-				foreach($javascripts as $javascript) {
-					$collection->javascript($javascript);
-				}
-			}
-		});
-	}
-
-	/**
-	 * Get the services provided by the provider.
-	 *
-	 * @return array
-	 */
-	public function provides()
-	{
-		return array('admin');
-	}
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return array(self::PACKAGE_NAME);
+    }
 }
