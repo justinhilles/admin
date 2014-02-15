@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Permission extends Model
 {
- 	protected $guarded = array();
+    protected $guarded = array();
 
- 	protected $table = 'permissions';
+    protected $table = 'permissions';
 
     public static $sluggable = array(
         'build_from' => 'name',
@@ -16,7 +16,7 @@ class Permission extends Model
         'unique' => true
     );
 
- 	public static $rules = array(
- 		'name' => 'required'
- 	);
+    public static $rules = array(
+    	'name' => 'required'
+    );
 }

@@ -31,12 +31,6 @@ class AdminServiceProvider extends ServiceProvider {
     public function boot()
     {       
         $this->bootFromConfig(self::PACKAGE_NAME);
-        
-        Event::listen('asset.pipeline.boot', function($pipeline) {
-            $config = $pipeline->getConfig();
-            $config['paths'][] = 'vendor/justinhilles/admin';
-            $pipeline->setConfig($config);
-        });
     }
 
     /**
